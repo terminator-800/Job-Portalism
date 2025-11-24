@@ -6,6 +6,8 @@ import { extractPublicIdFromUrl } from "../../../service/extract-public-id-url.j
 import { deleteFromCloudinary } from "../../../utils/delete-from-cloudinary.js";
 import pool from "../../../config/database-connection.js";
 import logger from "../../../config/logger.js";
+import { getRejectionEmailHTML } from './email-rejection.js'
+import { sendUserEmail } from "./email-rejection.js";
 
 interface RejectUserParams {
     user_id?: number;
@@ -14,6 +16,8 @@ interface RejectUserParams {
 interface RejectUserResult {
     success: boolean;
     message: string;
+        displayName: string;
+
 }
 
 export const rejectUser = async (req: Request<RejectUserParams>, res: Response): Promise<void> => {
@@ -30,6 +34,22 @@ export const rejectUser = async (req: Request<RejectUserParams>, res: Response):
     try {
         connection = await pool.getConnection();
         const result = await rejectUsers(connection, user_id as number);
+        
+   
+        const [emailRows] = await connection.execute<RowDataPacket[]>(
+        `SELECT email FROM users WHERE user_id = ?`,
+        [user_id]
+        );
+        const userEmail = emailRows[0]?.email;
+
+        if (userEmail) {
+            await sendUserEmail(
+                userEmail,
+                "TriConnect Account Rejected",
+                getRejectionEmailHTML(result.displayName)
+            );
+        }            
+
 
         logger.info(`User ${user_id} rejected successfully`);
         res.json({ success: true, message: result.message });
@@ -73,7 +93,23 @@ async function rejectUsers(connection: PoolConnection, user_id: number): Promise
 
         const existingData: Record<string, any> = existingRows[0] || {};
 
-        const displayName: string = existingData.full_name || existingData.business_name || existingData.agency_name || "unknown";
+        let displayName: string;
+        switch (role) {
+        case "jobseeker":
+            displayName = existingData.full_name || "unknown";
+            break;
+        case "business-employer":
+            displayName = existingData.business_name || "unknown";
+            break;
+        case "individual-employer":
+            displayName = existingData.full_name || "unknown";
+            break;
+        case "manpower-provider":
+            displayName = existingData.agency_name || "unknown";
+            break;
+        default:
+            displayName = "unknown";
+        }
 
         // --- Delete files from Cloudinary ---
         for (const field of fileFields) {
@@ -133,6 +169,7 @@ async function rejectUsers(connection: PoolConnection, user_id: number): Promise
         return {
             success: true,
             message: `${role} requirements rejected, files and folders removed, and rejection recorded.`,
+            displayName
         };
     } catch (error) {
         throw error;

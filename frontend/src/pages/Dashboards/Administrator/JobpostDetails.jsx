@@ -21,7 +21,7 @@ const JobpostDetails = ({ jobPost, onClose }) => {
 
     return (
         <div className="fixed inset-0 z-50 bg-opacity-50 flex items-center justify-center">
-            <div className="relative bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl max-h-screen h-[90vh] overflow-y-auto border border-gray-300
+            <div className="relative backdrop-blur-2xl p-8 shadow-lg w-full max-w-4xl max-h-screen h-[90vh] overflow-y-auto border border-gray-300
             max-[991px]:mx-10
             max-[861px]:mx-10
             max-[426px]:mx-5
@@ -37,12 +37,26 @@ const JobpostDetails = ({ jobPost, onClose }) => {
                         `}
                 </style>
 
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold cursor-pointer"
-                >
-                    &times;
-                </button>
+                {/* Close Button */}
+                    <button
+                        onClick={onClose}
+                        className="mt-5 absolute top-4 right-8 w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600 transition"
+                        >
+                        <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    </button>
+
                 <h2 className="text-3xl font-bold mb-4 text-center">Job Post Details</h2>
                 <div className="justify-between my-4 space-y-5">
                     <p><span className='font-semibold'>Title:</span> {jobPost.job_title}</p>

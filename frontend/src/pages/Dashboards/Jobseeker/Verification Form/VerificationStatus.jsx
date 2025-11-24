@@ -4,7 +4,7 @@ const VerificationStatus = ({ profileData, openForm }) => {
   if (profileData.is_rejected) {
     return (
       <div className="flex items-center justify-between w-full">
-        <div className="bg-yellow-100 p-6 rounded-md shadow-md flex justify-between items-center w-full">
+        <div className="bg-yellow-100 p-6 shadow-md flex justify-between items-center w-full">
           <div className="flex gap-4 items-center">
             <img src={icons.not_verified} alt="Not Verified" className="w-11" />
             <div>
@@ -16,7 +16,7 @@ const VerificationStatus = ({ profileData, openForm }) => {
             </div>
           </div>
 
-          <button className="bg-green-600 text-white px-5 py-2 rounded-2xl cursor-pointer" onClick={openForm}>
+          <button className="bg-green-600 text-white px-10 py-1 cursor-pointer" onClick={openForm}>
             Verify Now
           </button>
         </div>
@@ -27,7 +27,7 @@ const VerificationStatus = ({ profileData, openForm }) => {
   if (profileData.is_submitted) {
     return (
       <div className="flex items-center justify-between w-full">
-        <div className="bg-yellow-100 p-6 rounded-md shadow-md flex justify-between items-center w-full">
+        <div className="bg-yellow-100 p-6 shadow-md flex justify-between items-center w-full">
           <div className="flex gap-4 items-center">
             <img src={icons.not_verified} alt="Not Verified" className="w-11" />
             <div>
@@ -44,7 +44,7 @@ const VerificationStatus = ({ profileData, openForm }) => {
 
   return (
     <div className="flex items-center justify-between w-full">
-      <div className="bg-yellow-100 p-6 rounded-md shadow-md flex justify-between items-center w-full">
+      <div className="bg-yellow-100 p-6 shadow-md flex justify-between items-center w-full">
         <div className="flex gap-4 items-center">
           <img src={icons.not_verified} alt="Not Verified" className="w-11" />
           <div>
@@ -55,7 +55,7 @@ const VerificationStatus = ({ profileData, openForm }) => {
           </div>
         </div>
 
-        <button className="bg-green-600 text-white px-5 py-2 rounded-2xl cursor-pointer" onClick={openForm}>
+        <button className="bg-green-600 text-white px-10 py-1 cursor-pointer" onClick={openForm}>
           Verify Now
         </button>
       </div>

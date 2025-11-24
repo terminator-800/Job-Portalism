@@ -25,47 +25,29 @@ const ChatLayout = () => {
   return (
     <>
       <Sidebar />
-      <div className="pl-110 pr-50 pt-50
-          2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-5
-            max-[426px]:px-2
-      ">
+      <div className="pl-70 pr-10 pt-30">
+        <div className="bg-white shadow-md py-6 px-10 mb-8">
+        <div className="flex flex-col">
+
         <h1 className="text-2xl font-bold text-blue-900">Messages</h1>
         <p className="text-gray-600">
           Keep in touch with employers and agencies — track your job conversations here
         </p>
+          </div>
+        </div>
       </div>
 
-      <div className="relative min-h-[75vh] bg-linear-to-b from-white to-cyan-400 pl-110 pr-50 pt-15
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-5
-            max-[426px]:px-2
-      ">
-
-        <div className="bg-white rounded shadow-md mx-auto h-[500px] flex flex-col border border-gray-300">
+      <div className="relative min-h-[75vh] bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-15">
+        <div className="bg-white rounded shadow-md mx-auto h-[600px] flex flex-col border border-gray-300">
           <div className="flex flex-1 overflow-hidden">
-
-            <div className="xl:w-1/3 border-r border-gray-300
-              max-[769px]:max-w-[769px]
-              flex flex-col
-              ">
+            <div className="border-r border-gray-300">
               <ChatTabs
                 activeTab={activeTab}
                 setActiveTab={handleTabChange}
                 setSelectedUser={setSelectedUser}
               />
 
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1">
                 <ConversationList
                   users={displayedUsers}
                   selectedUser={selectedUser}
@@ -75,7 +57,6 @@ const ChatLayout = () => {
             </div>
 
             <div className="flex flex-col flex-1 border-l border-gray-300
-                            max-[601px]:w-50
               ">
               <ChatHeader selectedUser={selectedUser} />
               <ChatWindow selectedUser={selectedUser} />

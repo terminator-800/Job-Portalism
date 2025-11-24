@@ -1,8 +1,7 @@
 const ApplicantMenu = ({ onRejectClick, onViewProfileClick, onMessageClick }) => {
   return (
-    <div className="absolute right-10 top-10 bg-white border border-gray-300 rounded-lg shadow-md z-10 p-2">
+    <div className="absolute right-10 top-10 bg-white border border-gray-300 shadow-md z-10 p-2">
       <ul className="text-black">
-
 
         {/* View Profile */}
         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded"
@@ -10,11 +9,11 @@ const ApplicantMenu = ({ onRejectClick, onViewProfileClick, onMessageClick }) =>
           View Profile
         </li>
 
-
+          
         {/* Message Applicant */}
         <li
-          className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded"
-          onClick={onMessageClick}
+          className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-[#D8D9DB]"
+          onClick={onMessageClick}  
         >
           Message Applicant
         </li>
@@ -22,12 +21,11 @@ const ApplicantMenu = ({ onRejectClick, onViewProfileClick, onMessageClick }) =>
 
         {/* Reject Applicant */}
         <li
-          className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded text-red-600"
+          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
           onClick={onRejectClick}
         >
           Reject Applicant
         </li>
-
       </ul>
     </div>
   );

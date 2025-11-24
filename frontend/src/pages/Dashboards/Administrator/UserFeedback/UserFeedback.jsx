@@ -38,34 +38,30 @@ const UserFeedback = () => {
   return (
     <>
       <Sidebar />
-      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-10
-             pt-50
-             ">
-        <h1 className="text-2xl font-bold text-blue-900">User Feedback</h1>
-        <p className="mt-2">
-          Review and manage feedback submitted by TriConnect users
-        </p>
+      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30 backdrop-blur-2xl">
 
-        <div className="w-full rounded mt-15 flex flex-col flex-1">
+        <div className="bg-white shadow-md py-6 px-10 mb-8">
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-blue-900">User Feedback</h1>
+              <p>
+                Review and manage feedback submitted by TriConnect users
+              </p>
+          </div>
+        </div>
+        
+        <div className="w-full rounded mt-10 flex flex-col flex-1">
           {/* Table Section */}
           <div className="overflow-x-auto flex-1">
-            <table className="min-w-max w-full border border-gray-300 rounded-lg overflow-hidden text-left">
+            <table className="min-w-max w-full border border-gray-300 overflow-hidden text-left">
               <thead className="bg-gray-300 text-left">
                 <tr>
-                  <th className="px-6 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">
+                  <th className="px-6 py-3 font-semibold text-gray-700 whitespace-nowrap">
                     User Details
                   </th>
-                  <th className="px-6 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">
+                  <th className="px-6 py-3 font-semibold text-gray-700 whitespace-nowrap">
                     User Type
                   </th>
-                  <th className="px-6 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">
+                  <th className="px-6 py-3 font-semibold text-gray-700 whitespace-nowrap">
                     Date Submitted
                   </th>
                   <th className="px-6 py-3 whitespace-nowrap"></th>
@@ -103,7 +99,7 @@ const UserFeedback = () => {
                     <td className="px-6 py-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => setSelectedFeedback(fb)}
-                        className="px-4 py-2 rounded bg-blue-900 text-white hover:bg-blue-800 cursor-pointer"
+                        className="px-10 py-1 bg-blue-900 text-white hover:bg-blue-800 cursor-pointer"
                       >
                         View Feedback
                       </button>

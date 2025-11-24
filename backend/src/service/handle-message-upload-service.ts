@@ -1,10 +1,5 @@
 import type { PoolConnection, RowDataPacket, ResultSetHeader } from "mysql2/promise";
-import { fileURLToPath } from 'url';
 import logger from "../config/logger.js";
-import path from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 interface FileUpload {
   path: string;
@@ -14,15 +9,34 @@ interface HandleMessageUploadParams {
   sender_id: number;
   receiver_id: number;
   message?: string;
-  files: FileUpload[] | undefined;
+  cover_letter?: string;
+  full_name?: string;
+  phone_number?: string;
+  email_address?: string;
+  current_address?: string;
+  job_title?: string;
+  resume?: FileUpload;
+  files?: FileUpload[] | undefined;
 }
 
 export const handleMessageUpload = async (
   connection: PoolConnection,
-  { sender_id, receiver_id, message, files }: HandleMessageUploadParams,
+  {
+    sender_id,
+    receiver_id,
+    message,
+    cover_letter,
+    full_name,
+    phone_number,
+    email_address,
+    current_address,
+    job_title,
+    resume,
+    files
+  }: HandleMessageUploadParams
 ) => {
-
   try {
+    // Determine conversation
     const user_small_id = Math.min(sender_id, receiver_id);
     const user_large_id = Math.max(sender_id, receiver_id);
 
@@ -32,7 +46,7 @@ export const handleMessageUpload = async (
     );
 
     let conversation_id: number;
-
+   
     if (existingRows.length > 0 && existingRows[0]) {
       conversation_id = existingRows[0].conversation_id;
     } else {
@@ -43,47 +57,76 @@ export const handleMessageUpload = async (
       );
       conversation_id = result.insertId;
     }
+ 
+    if (full_name || phone_number || email_address || current_address || cover_letter || resume || job_title) {
+      await connection.query(
+        `INSERT INTO messages (
+          conversation_id, sender_id, receiver_id,
+          full_name, phone_number, email_address, current_address, cover_letter, resume, job_title,
+          message_type
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 
-    // Insert text message if exists
+        [
+          conversation_id,
+          sender_id,
+          receiver_id,
+          full_name ?? null,
+          phone_number ?? null,
+          email_address ?? null,
+          current_address ?? null,
+          cover_letter ?? null,
+          resume ? resume.path.replace(/\\/g, "/") : null, 
+          job_title ?? null,                               
+          "apply"                                          
+        ]
+      );
+    }
+
+    // Insert optional text message
     if (message && message.trim() !== "") {
       await connection.query(
-        `INSERT INTO messages (conversation_id, sender_id, receiver_id, message_text, message_type)
-         VALUES (?, ?, ?, ?, ?)`,
+        `INSERT INTO messages (
+          conversation_id, sender_id, receiver_id,
+          message_text, message_type
+        ) VALUES (?, ?, ?, ?, ?)`,
         [conversation_id, sender_id, receiver_id, message, "text"]
       );
     }
 
+    // Insert files
     if (files && files.length > 0) {
       for (const file of files) {
-        const normalizedPath = file.path.replace(/\\/g, "/");
-        const file_url = normalizedPath;
-
+        const file_url = file.path.replace(/\\/g, "/");
         await connection.query(
-          `INSERT INTO messages (conversation_id, sender_id, receiver_id, message_type, file_url)
-           VALUES (?, ?, ?, ?, ?)`,
+          `INSERT INTO messages (
+            conversation_id, sender_id, receiver_id, message_type, file_url
+          ) VALUES (?, ?, ?, ?, ?)`,
           [conversation_id, sender_id, receiver_id, "file", file_url]
         );
       }
     }
 
-    // Return the latest message
+    // Return latest message
     const [newMessageRows] = await connection.query<RowDataPacket[]>(
       `SELECT * FROM messages 
        WHERE conversation_id = ? 
-       ORDER BY created_at DESC LIMIT 1`,
+       ORDER BY created_at DESC 
+       LIMIT 1`,
       [conversation_id]
     );
 
     const latestMessage = newMessageRows?.[0];
-    
+
     if (!latestMessage) {
-      const errMsg = "Failed to retrieve the latest message.";
-      logger.error(errMsg, { sender_id, receiver_id, conversation_id });
+      logger.error("Failed to retrieve the latest message.", { sender_id, receiver_id, conversation_id });
       throw new Error("Failed to retrieve the latest message.");
     }
 
     return latestMessage;
+
   } catch (error) {
+    console.error("REAL ERROR:", error);
+    logger.error("Failed to handle message upload", { error });
     throw new Error("Failed to handle message upload.");
   }
 };

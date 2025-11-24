@@ -28,12 +28,14 @@ const BrowseJob = () => {
 
     return (
         <>
-            <h1 className="text-5xl font-bold text-blue-900">Browse Job</h1>
-            <p className="text-2xl mt-2">
-                Browse job openings and apply to positions that fit you
-            </p>
+            <div className="bg-white shadow-md py-6 px-10 mb-8">
+                <div className="flex flex-col">
+                    <h1 className="text-2xl font-bold text-blue-900">Browse Job</h1>
+                    <p>Browse job openings and apply to positions that fit you</p>
+                </div>
+            </div>
 
-            <div className="rounded-xl w-2xl bg-white pt-2 pb-2 pl-5 pr-5 shadow-md flex justify-between items-center mt-15">
+            <div className="w-2xl bg-white pt-2 pb-2 pl-5 pr-5 shadow-md flex justify-between items-center mt-15">
                 <input
                     type="text"
                     placeholder="Search job titles"
@@ -45,7 +47,7 @@ const BrowseJob = () => {
             </div>
 
             <div className="flex gap-3 mt-15">
-                <div className="w-1/2 rounded overflow-y-auto space-y-5">
+                <div className="w-1/2 overflow-y-auto space-y-5">
                     {loadingJobPosts ? (
                         <p>Loading jobs...</p>
                     ) : errorJobPosts ? (
@@ -59,7 +61,7 @@ const BrowseJob = () => {
                             <div
                                 key={post.job_post_id}
                                 onClick={() => setSelectedJobPost(post)}
-                                className={`border border-gray-300 rounded-xl py-5 px-5 shadow-md cursor-pointer h-[23.3vh] max-h-[23.3vh] overflow-hidden
+                                className={`border border-gray-300 py-5 px-5 shadow-md cursor-pointer h-[23.3vh] max-h-[23.3vh] overflow-hidden
                                         ${selectedJobPost?.job_post_id === post.job_post_id ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}                            >
                                 <div className="mb-4">
                                     <h3 className="text-xl font-bold truncate">
@@ -91,7 +93,7 @@ const BrowseJob = () => {
                     )}
                 </div>
 
-                <div className="w-full bg-gray-200 border border-gray-300 py-5 px-7 rounded-xl overflow-y-auto h-[100vh]">
+                <div className="w-full bg-gray-200 border border-gray-300 py-5 px-7 overflow-y-auto h-screen">
                     {selectedJobPost ? (
                         <>
                             <div className="flex gap-10 mb-10 mt-5 items-center">
@@ -124,7 +126,7 @@ const BrowseJob = () => {
 
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="bg-blue-900 text-white px-10 py-1 rounded-lg cursor-pointer"
+                                className="bg-blue-900 text-white px-10 py-1 cursor-pointer"
                             >
                                 Apply Job
                             </button>
@@ -166,7 +168,7 @@ const BrowseJob = () => {
                                 <span>
                                     <strong>Job Description</strong>
                                 </span>
-                                <span className="text-gray-700 break-words whitespace-pre-wrap w-full">
+                                <span className="text-gray-700 wrap-break-word whitespace-pre-wrap w-full">
                                     {selectedJobPost.job_description}
                                 </span>
                             </div>
@@ -184,7 +186,7 @@ const BrowseJob = () => {
                 </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-15 justify-center">
+            <div className="flex items-center gap-2 mt-15 justify-center pb-10">
                 <Pagination
                     currentPage={currentPage}
                     totalPages={Math.ceil(filteredJobPosts.length / postsPerPage)}

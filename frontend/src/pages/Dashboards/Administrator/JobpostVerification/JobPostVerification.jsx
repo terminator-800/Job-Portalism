@@ -27,34 +27,30 @@ const JobPostVerification = () => {
     <>
       <Sidebar />
       <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-10
-             pt-50
+            pl-70 pr-10 pt-30
              ">
 
-        <div>
-          <h1 className="text-2xl font-bold text-blue-900">Job Post Verification</h1>
-          <p className="mt-2">Review and verify job posts to allow platform publication</p>
-        </div>
-
+          <div className="bg-white shadow-md py-6 px-10 mb-8">
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-blue-900">Job Post Verification</h1>
+              <p>Review and verify job posts to allow platform publication</p>
+            </div>
+          </div>
+      
         <div className="flex-1 mt-10 overflow-y-auto">
           {pendingJobPosts.length === 0 ? (
-            <p className="text-gray-500 italic text-lg">No pending job posts.</p>
+            <p className="text-gray-500 italic text-lg text-center">No pending job posts.</p>
           ) : (
             <div className="flex flex-col space-y-10 overflow-x-auto ">
               {currentPosts.map((post) => (
                 <div
                   key={post.job_post_id}
-                  className="bg-white p-5 rounded-xl shadow-md border border-gray-300 mb-5 
+                  className="bg-white p-5 shadow-md border border-gray-300 mb-5 
                  min-w-[800px] 
                  max-[768px]:min-w-[600px] 
-                 max-[425px]:min-w-1 
-                 whitespace-nowrap"
+                 max-[425px]:min-w-1
+                 whitespace-nowrap
+                 "
                 >
                   {/* Header */}
                   <div className="border-b border-gray-300 pb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
@@ -89,7 +85,7 @@ const JobPostVerification = () => {
                         setSelectedJobPost(post);
                         setShowModal(true);
                       }}
-                      className="bg-green-700 text-white px-6 sm:px-10 rounded-md py-1 cursor-pointer hover:bg-green-600"
+                      className="bg-green-700 text-white px-10 sm:px-10 py-1 cursor-pointer hover:bg-green-600"
                     >
                       Approve
                     </button>
@@ -99,7 +95,7 @@ const JobPostVerification = () => {
                         setJobPostToReject(post);
                         setShowRejectModal(true);
                       }}
-                      className="bg-red-700 text-white px-6 sm:px-10 rounded-md py-1 cursor-pointer hover:bg-red-600"
+                      className="bg-red-700 text-white px-10 py-1 cursor-pointer hover:bg-red-600"
                     >
                       Reject
                     </button>
@@ -109,10 +105,11 @@ const JobPostVerification = () => {
                         setJobPostDetails(post);
                         setShowDetailsModal(true);
                       }}
-                      className="px-6 sm:px-10 border bg-gray-300 hover:bg-gray-400 border-gray-300 rounded-md cursor-pointer py-1"
+                      className="px-10 border bg-gray-300 hover:bg-gray-400 border-gray-300 cursor-pointer py-1"
                     >
                       View Details
                     </button>
+
                   </div>
                 </div>
               ))}

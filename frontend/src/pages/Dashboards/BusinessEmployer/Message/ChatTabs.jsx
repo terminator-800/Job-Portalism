@@ -13,7 +13,7 @@ const ChatTabs = ({ activeTab, setActiveTab }) => {
     }`;
 
   return (
-    <div className="flex border-b border-gray-300 bg-white">
+    <div className="flex border-b border-gray-300 bg-white w-[500px]">
       <button
         onClick={() => handleTabClick(ROLE.JOBSEEKER)}
         className={`cursor-pointer ${tabClasses(ROLE.JOBSEEKER)}`}

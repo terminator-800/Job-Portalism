@@ -27,6 +27,7 @@ export interface JobPostRow extends RowDataPacket {
   authorized_person: string | null;
   applicant_count: number;
   category: JobCategory | null;
+  required_skill: string | null;
 }
 
 export interface GroupedJobPosts {
@@ -80,6 +81,7 @@ export async function getJobPostsByUserGrouped(
           ELSE NULL
         END AS authorized_person,
         COUNT(CASE WHEN ja.application_status != 'rejected' THEN 1 END) AS applicant_count,
+        jp.required_skill, 
         CASE
           WHEN jp.status = 'pending' AND (jp.jobpost_status != 'deleted' OR jp.jobpost_status IS NULL)
             THEN 'pending'

@@ -10,19 +10,21 @@ const ManpowerProviderDashboard = () => {
   return (
     <>
       <Sidebar/>
-    <div className="relative min-h-[140vh] bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-50">
+    <div className="relative min-h-[140vh] bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
+
+      <div className="bg-white shadow-md py-6 px-10 mb-8 flex flex-col">
+        <h1 className="text-2xl font-bold text-blue-900">Welcome, Employer!</h1>
+        <p>Your hiring platform statistics at a glance</p>
+      </div>
 
       <div className="fixed top-0 left-0 w-full z-50 bg-white shadow">
         <Navbar userType={`${ROLE.MANPOWER_PROVIDER}`} />
       </div>
 
-      <h1 className='text-5xl font-bold text-blue-900'>Welcome, Employer!</h1>
-      <p className='text-2xl mt-2'>Your hiring platform statistics at a glance</p>
-
       <div className='w-full rounded mt-15'>
 
         <div className='flex justify-between items-center mb-4'>
-          <h2 className='text-2xl font-semibold'>Recent Job Posts</h2>
+          <h2 className='text-2xl italic'>Recent Job Posts</h2>
           <button className='bg-blue-900 text-white px-4 py-2 rounded-lg'>+ Job Post</button>
         </div>
 
@@ -90,7 +92,7 @@ const ManpowerProviderDashboard = () => {
       </div>
 
       <div className='w-full rounded mt-15'>
-        <h2 className='text-2xl font-semibold mb-4'>Recent Applicants</h2>
+        <h2 className='text-2xl italic mb-4'>Recent Applicants</h2>
         <div className='rounded-2xl shadow border border-gray-300 overflow-hidden'>
           <table className='w-full border-collapse'>
             <thead>

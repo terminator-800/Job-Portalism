@@ -24,6 +24,7 @@ import { employerDashboard } from "../controllers/userController/employer-dashbo
 import { rejectApplication } from "../controllers/userController/reject-application/reject-application.js";
 import { changeProfile } from "../controllers/userController/change-profile/change-profile.js";
 import { changeUserProfile } from "./../middleware/upload-files.js";
+import { editJobPost } from "../controllers/job-post-controller/update-job-post/edit-job-post.js";
 
 const router = express.Router();
 
@@ -47,5 +48,6 @@ router.get("/individual-employer/applicants", authenticate, viewApplicants);
 router.get("/individual-employer/dashboard", authenticate, employerDashboard);
 router.patch("/individual-employer/applications/:applicationId/reject", authenticate, rejectApplication);
 router.patch("/individual-employer/change-profile", authenticate, changeUserProfile, changeProfile);
+router.put("/individual-employer/edit-job-post/:job_post_id", authenticate, editJobPost);
 
 export default router;

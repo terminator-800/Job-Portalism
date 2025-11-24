@@ -95,40 +95,36 @@ const FindAgency = () => {
         />
       )}
 
-      <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-110 pr-50 pt-50 pb-32
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-5
-            max-[426px]:px-2
-            ">
+      <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
 
         {profileData?.is_verified ? (
           <>
-            <h1 className="text-2xl font-bold text-blue-900">
-              Search for Manpower Provider
-            </h1>
-            <p className="mt-2">
-              Find agencies to help you get hired
-            </p>
+          <div className="bg-white shadow-md py-6 px-10 mb-8">
+            <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-blue-900">
+                  Search for Manpower Provider
+                </h1>
+                <p>
+                  Find agencies to help you get hired
+                </p>
+            </div>
+          </div>
 
             {isAgenciesLoading ? (
               <p className="mt-10 text-lg">Loading agencies...</p>
             ) : agencies.length === 0 ? (
               <p className="mt-10 text-lg italic text-gray-500">No manpower providers found.</p>
             ) : (
-              <>
-                <div className="grid grid-cols-2 gap-6 mt-15
+              <>  
+              <div className="flex flex-col min-h-[65vh]">
+                  <div className="grid grid-cols-2 gap-6 mt-15
                                 max-[576px]:grid-cols-1"
                   >
 
                   {currentAgencies.map((agency) => (
                     <div
                       key={agency.agency_id}
-                      className="flex flex-col bg-white rounded-xl border border-gray-300 p-6 shadow-md"
+                      className="flex flex-col bg-white border border-gray-300 p-6 shadow-md"
                     >
 
                       <div className="flex items-center gap-4
@@ -162,11 +158,11 @@ const FindAgency = () => {
                         ">
                         <button
                           onClick={() => openApply(agency)}
-                          className="bg-blue-900 text-white px-10 py-2 rounded-md cursor-pointer"
+                          className="bg-blue-900 text-white px-10 py-1 cursor-pointer"
                         >
                           Message
                         </button>
-                        <button className="border border-gray-400 px-4 py-2 rounded-md cursor-pointer">
+                        <button className="border border-gray-400 px-10 py-1 cursor-pointer">
                           View Profile
                         </button>
                       </div>
@@ -174,26 +170,21 @@ const FindAgency = () => {
                   ))}
                 </div>
 
-                {/* ✅ Added this section for pagination controls */}
-                <Pagination
-                  currentPage={currentPage}        
-                  totalPages={totalPages}          
-                  setCurrentPage={setCurrentPage}  
-                />
-                
+              </div>
+               {/* ✅ Added this section for pagination controls */}
+                  <div className="pb-10 flex justify-center">
+                    <Pagination
+                      currentPage={currentPage}        
+                      totalPages={totalPages}          
+                      setCurrentPage={setCurrentPage}  
+                    />
+                  </div>
               </>
             )}
           </>
         ) : (
-          <div className="bg-white shadow-md rounded-3xl p-6 w-full max-w-7xl border border-gray-300 px-20">
+          <div className="bg-white shadow-md p-6 w-full max-w-full border border-gray-300 px-20">
             <VerificationStatus profileData={profileData} openForm={openForm} />
-            <p className="mt-4 text-sm text-gray-600">
-              {profileData?.is_rejected
-                ? "Your verification request was rejected. Please review and resubmit the form."
-                : profileData?.is_submitted
-                  ? "Your verification is under review. Please wait for approval."
-                  : "You need to submit verification before accessing this feature."}
-            </p>
           </div>
         )}
       </div>

@@ -24,10 +24,10 @@ const allowedRoles: typeof ROLE[keyof typeof ROLE][] = [
 export const apply = async (req: CustomRequest, res: Response) => {
   let connection: PoolConnection | undefined;
   const ip = req.ip;
-  const { receiver_id, message, job_post_id } = req.body;
+  const { receiver_id, full_name, phone_number, email_address, current_address, cover_letter, job_post_id, job_title } = req.body;
   const sender_id = req.user?.user_id;
   const role = req.user?.role;
-
+  
   if (!sender_id || !role) {
     return res.status(401).json({ error: 'Unauthorized: missing user info' });
   }
@@ -44,19 +44,24 @@ export const apply = async (req: CustomRequest, res: Response) => {
     await insertJobApplication(connection, job_post_id, sender_id, role);
 
     const uploadedFiles = Array.isArray(req.files)
-      ? await Promise.all(
-        req.files.map(async (f: any) => {
-          const secureUrl = await uploadToCloudinary(f.path, 'job_applications');
-          return { path: secureUrl };
-        })
-      )
-      : undefined;
+  ? await Promise.all(
+      req.files.map(async (f: any) => {
+        const secureUrl = await uploadToCloudinary(f.path, 'job_applications');
+        return { path: secureUrl };
+      })
+    )
+  : [];
 
     const newMessage: Message = await handleMessageUpload(connection, {
       sender_id,
       receiver_id,
-      message,
-      files: uploadedFiles,
+      cover_letter,
+      full_name, 
+      phone_number,
+      email_address,
+      current_address,
+      job_title,
+      resume: uploadedFiles[0]!,  
     });
 
     if (!newMessage.conversation_id) {

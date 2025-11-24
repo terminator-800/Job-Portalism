@@ -1,18 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ROLE } from '../../../../../utils/role';
 import PreviewImage from '../Verification Form/PreviewImage';
 import FileUpload from '../Verification Form/FileUpload';
 import Agreement from '../../Agreement';
 import axios from 'axios';
+import SubmitSucessful from '../../../../components/SubmitSucessful';
 
-const VerificationForm = ({ onClose, onSubmitSuccess }) => {
+const VerificationForm = ({ onClose }) => {
   const governmentIdRef = useRef();
   const selfieWithIdRef = useRef();
   const clearanceRef = useRef();
+  const queryClient = useQueryClient();
 
   const [agreed, setAgreed] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [governmentIdPreview, setGovernmentIdPreview] = useState(null);
   const [showGovernmentIdModal, setShowGovernmentIdModal] = useState(false);
@@ -34,7 +37,7 @@ const VerificationForm = ({ onClose, onSubmitSuccess }) => {
   const [selfie_with_id, setSelfieWithId] = useState(null);
   const [nbi_barangay_clearance, setClearance] = useState(null);
 
-  const { mutate, isPending } = useMutation({
+  const mutation = useMutation({
     mutationFn: async () => {
       const formData = new FormData();
       formData.append('full_name', full_name);
@@ -59,18 +62,19 @@ const VerificationForm = ({ onClose, onSubmitSuccess }) => {
       return response.data;
     },
     onSuccess: () => {
-      alert('Requirements submitted successfully!');
-      onSubmitSuccess?.();
+      setShowSuccessModal(true);
+      queryClient.invalidateQueries(['individual-requirements']);
     },
     onError: () => {
       alert('Requirements submitted failed!');
-
     }
   });
 
+    const isPending = mutation.isPending;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate();
+    mutation.mutate();
   };
 
   useEffect(() => {
@@ -82,6 +86,7 @@ const VerificationForm = ({ onClose, onSubmitSuccess }) => {
 
   return (
     <div className='fixed flex items-center justify-center z-50 inset-0'>
+      {!showSuccessModal && (
       <form
         onSubmit={handleSubmit}
         className='relative z-10 border-2 border-gray-300 bg-white rounded-xl p-6 h-[90vh] overflow-y-auto w-full max-w-2xl mt-20 hide-scrollbar'
@@ -180,14 +185,32 @@ const VerificationForm = ({ onClose, onSubmitSuccess }) => {
           {showAgreement && <Agreement onClose={() => setShowAgreement(false)} />}
         </div>
 
-        <button
-          type='submit'
-          disabled={!agreed || isPending}
-          className={`w-full px-5 py-2 rounded mt-4 text-white ${agreed ? 'bg-blue-900 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'} cursor-pointer`}
-        >
-          {isPending ? 'Submitting...' : 'Submit Requirements'}
-        </button>
+         <button
+            type="submit"
+            disabled={!agreed || isPending}
+            className={`
+              w-full px-5 py-2 rounded mt-4 text-white
+              ${
+                agreed && !isPending
+                  ? "bg-blue-900 hover:bg-blue-800 cursor-pointer"
+                  : "bg-gray-400 cursor-not-allowed"
+              }
+            `}
+          >
+            {isPending ? "Submitting..." : "Submit Requirements"}
+          </button>
+
       </form>
+      )}
+      
+      {showSuccessModal && (
+        <SubmitSucessful 
+          onClose={() => {
+            setShowSuccessModal(false);
+            onClose(); 
+          }} 
+        />
+      )}
 
       <PreviewImage show={showGovernmentIdModal} src={governmentIdPreview} alt="Government ID Preview" onClose={() => setShowGovernmentIdModal(false)} />
       <PreviewImage show={showSelfieWithIdModal} src={selfieWithIdPreview} alt="Selfie with ID Preview" onClose={() => setShowSelfieWithIdModal(false)} />

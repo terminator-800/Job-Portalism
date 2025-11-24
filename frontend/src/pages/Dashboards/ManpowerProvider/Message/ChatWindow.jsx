@@ -9,6 +9,7 @@ import { useSocket } from '../../../../../hooks/useSocket';
 import { ROLE } from '../../../../../utils/role';
 import icons from '../../../../assets/svg/Icons';
 import socket from '../../../../../utils/socket';
+import { ApplicationCard } from '../../../../components/ApplicationCard';
 
 const ChatWindow = ({ selectedUser }) => {
   const endRef = useRef(null);
@@ -40,7 +41,6 @@ const ChatWindow = ({ selectedUser }) => {
     if (!conversation_id) return;
 
     const handleNewMessage = (newMessage) => {
-
       if (Number(newMessage.conversation_id) === Number(conversation_id)) {
         queryClient.invalidateQueries({
           queryKey: ['messages', ROLE.MANPOWER_PROVIDER, conversation_id]
@@ -92,7 +92,7 @@ const ChatWindow = ({ selectedUser }) => {
             {messages.map((msg, index) => {
               const isSender = Number(msg.sender_id) === Number(currentUserId);
               const senderAvatar = selectedUser?.authorized_profile;
-              const senderInitials = getInitials(selectedUser?.authorized_person || 'unkown');
+              const senderInitials = getInitials(selectedUser?.authorized_person || 'unknown');
               const alignment = isSender ? 'justify-end' : 'justify-start';
               const bubbleStyle = isSender
                 ? 'bg-blue-500 text-white rounded-br-none'
@@ -104,7 +104,7 @@ const ChatWindow = ({ selectedUser }) => {
               return (
                 <li key={msg.message_id || `msg-${index}`} className={`flex ${alignment} items-end`}>
                   
-                  {/* AUTHORIZED PERSONEL */}
+                  {/* AUTHORIZED PERSONNEL */}
                   {!isSender && (
                     <div className="flex-shrink-0 w-8 h-8 rounded-full mr-2 text-xs font-semibold overflow-hidden flex items-center justify-center bg-gray-400 text-white">
                       {senderAvatar ? (
@@ -120,28 +120,56 @@ const ChatWindow = ({ selectedUser }) => {
                   )}
 
                   <div className="flex flex-col items-start">
-                    <div className={`max-w-xs px-4 py-2 rounded-lg text-sm ${bubbleStyle}`}>
-                      {msg.message_type === 'file' && msg.file_url && (
-                        <img
-                          src={`${msg.file_url}`}
-                          alt="Sent file"
-                          className="w-48 h-auto rounded-lg border border-gray-300 cursor-pointer hover:opacity-80"
-                          onClick={() => setPreviewImage(`${msg.file_url}`)}
-                        />
-                      )}
-                      <div className="break-words whitespace-pre-wrap">
-                        <div>{msg.message_text}</div>
-                      </div>
-                    </div>
+                    {/* APPLICATION CARD - Only if it has required application fields */}
+                    {msg.message_type === "apply" &&
+                    msg.full_name &&
+                    msg.email_address ? (
+                      ApplicationCard(msg, isSender)
+                    ) : (
+                      <>
+                        <div className={`max-w-xs px-4 py-2 rounded-lg text-sm ${bubbleStyle}`}>
+                          {/* FILE MESSAGE - PDF or Image */}
+                          {msg.message_type === 'file' && msg.file_url && (
+                            <>
+                              {msg.file_url.endsWith('.pdf') ? (
+                                <div
+                                  className="w-48 h-64 rounded-lg border border-gray-300 cursor-pointer overflow-hidden"
+                                  onClick={() => setPreviewImage(msg.file_url)}
+                                >
+                                  <iframe
+                                    src={msg.file_url}
+                                    title="PDF Preview"
+                                    className="w-full h-full pointer-events-none"
+                                  />
+                                </div>
+                              ) : (
+                                <img
+                                  src={msg.file_url}
+                                  alt="Sent file"
+                                  className="w-48 h-auto rounded-lg border border-gray-300 cursor-pointer hover:opacity-80"
+                                  onClick={() => setPreviewImage(msg.file_url)}
+                                />
+                              )}
+                            </>
+                          )}
 
-                    <div
-                      className={`text-xs mt-1 ${isSender ? 'text-right self-end text-gray-500' : 'text-left self-start text-gray-500'}`}
-                    >
-                      <div>sent {msg.created_at}</div>
-                      {isLastSenderMessage && !!msg.is_read && (
-                        <div className="text-xs text-blue-500 mt-1">Seen</div>
-                      )}
-                    </div>
+                          {/* TEXT MESSAGE */}
+                          <div className="break-words whitespace-pre-wrap">
+                            <div>{msg.message_text}</div>
+                          </div>
+                        </div>
+
+                        {/* Message timestamp and read status */}
+                        <div
+                          className={`text-xs mt-1 ${isSender ? 'text-right self-end text-gray-500' : 'text-left self-start text-gray-500'}`}
+                        >
+                          <div>sent {msg.created_at}</div>
+                          {isLastSenderMessage && !!msg.is_read && (
+                            <div className="text-xs text-blue-500 mt-1">Seen</div>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </li>
               );
@@ -152,20 +180,59 @@ const ChatWindow = ({ selectedUser }) => {
         </div>
       </div>
 
+      {/* Preview Modal */}
       {previewImage && (
         <div className="fixed inset-0 bg-opacity-70 flex items-center justify-center z-50">
-          <div className="relative bg-white p-4 rounded-lg max-w-full max-h-full border border-gray-300">
+          <div
+            className="relative bg-white px-4 py-10 border border-gray-300 flex flex-col items-center"
+            style={{
+              maxWidth: "95vw",
+              maxHeight: "90vh",
+            }}
+          >
+            {/* Close button */}
             <button
               className="absolute top-2 right-2 text-gray-700 hover:text-red-500 text-xl cursor-pointer"
               onClick={() => setPreviewImage(null)}
             >
               <img src={icons.close} alt="Close" />
             </button>
-            <img
-              src={previewImage}
-              alt="Preview"
-              className="max-w-[90vw] max-h-[80vh] object-contain rounded-lg"
-            />
+
+            {/* PDF or Image preview */}
+            {previewImage.endsWith('.pdf') ? (
+              <iframe
+                src={previewImage}
+                title="PDF Preview"
+                className="rounded-lg border"
+                style={{
+                  width: "80vw",
+                  height: "80vh",
+                }}
+              />
+            ) : (
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="object-contain rounded-lg"
+                style={{
+                  maxWidth: "80vw",
+                  maxHeight: "80vh",
+                }}
+              />
+            )}
+
+            {/* Download button for PDF */}
+            {previewImage.endsWith('.pdf') && (
+              <a
+                href={previewImage}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-4 right-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                download
+              >
+                Download PDF
+              </a>
+            )}
           </div>
         </div>
       )}

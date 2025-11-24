@@ -47,24 +47,28 @@ const ViewApplicant = () => {
   return (
     <>
       <Sidebar />
-      <div className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-50">
+      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
         <div>
 
           {profileData?.is_verified ? (
             <>
-              <h1 className="text-5xl font-bold text-blue-900">View Applicants</h1>
-              <p className="text-2xl mt-2">Manage applicants for your job postings</p>
+             <div className="bg-white shadow-md py-6 px-10 mb-8">
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-blue-900">View Applicants</h1>
+                <p>Manage applicants for your job postings</p>
+              </div>
+            </div>
 
               <div className="flex-1 mt-10">
-                <div className=" rounded-2xl shadow-lg border border-gray-300 bg-white">
+                <div className="shadow-lg border border-gray-300 bg-white">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-300">
-                        <th className="text-left py-3 px-4 rounded-l-2xl">Applicant Name</th>
-                        <th className="text-left py-3 px-4">Job Position</th>
-                        <th className="text-left py-3 px-4">Location</th>
-                        <th className="text-left py-3 px-4">Date Applied</th>
-                        <th className="text-left py-3 px-4 rounded-r-2xl"></th>
+                      <tr className="bg-gray-300 text-[#374151]">
+                        <th className="text-left py-3 px-4 font-semibold">Applicant Name</th>
+                        <th className="text-left py-3 px-4 font-semibold">Job Position</th>
+                        <th className="text-left py-3 px-4 font-semibold">Location</th>
+                        <th className="text-left py-3 px-4 font-semibold">Date Applied</th>
+                        <th className="text-left py-3 px-4"></th>
                       </tr>
                     </thead>
 
@@ -121,7 +125,7 @@ const ViewApplicant = () => {
               </div>
             </>
           ) : (
-            <div className="bg-white shadow-md rounded-3xl p-6 w-full max-w-7xl border border-gray-300 px-20">
+            <div className="bg-white shadow-md p-6 w-full max-w-full border border-gray-300 px-20">
               <VerificationStatus profileData={profileData} openForm={openForm} />
             </div>
           )}

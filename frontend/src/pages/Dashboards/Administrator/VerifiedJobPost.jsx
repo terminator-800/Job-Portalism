@@ -48,31 +48,25 @@ const VerifiedJobPost = () => {
   return (
     <>
       <Sidebar />
-      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-10
-             pt-50
-             ">
+      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
 
-        <div>
-          <h1 className="text-2xl font-bold text-blue-900">Verified Job Post</h1>
-          <p className="mt-2">View all job posts approved for publication</p>
-        </div>
+          <div className="bg-white shadow-md py-6 px-10 mb-8">
+            <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-blue-900">Verified Job Post</h1>
+                <p>View all job posts approved for publication</p>
+              </div>
+          </div>
+        
 
         <div className="flex-1 mt-10 overflow-y-auto">
           {verifiedJobPosts.length === 0 ? (
-            <p className="text-gray-500 italic text-lg">No verified job posts available.</p>
+            <p className="text-gray-500 italic text-lg text-center">No verified job posts available.</p>
           ) : (
             <div className="flex flex-col space-y-6 overflow-x-auto">
               {currentPosts.map((job) => (
                 <div
                   key={job.job_post_id}
-                  className="bg-white rounded-lg shadow-md p-6 flex justify-between border border-gray-300 
+                  className="bg-white shadow-md p-6 flex justify-between border border-gray-300 
                  min-w-[700px] max-[768px]:min-w-[550px] max-[425px]:min-w-[380px] whitespace-nowrap relative"
                   style={{ minHeight: '160px' }}
                 >
@@ -88,7 +82,7 @@ const VerifiedJobPost = () => {
 
                     <button
                       onClick={() => handleViewDetails(job)}
-                      className="mt-4 bg-gray-200 text-gray-700 px-4 py-2 rounded cursor-pointer text-sm hover:bg-gray-300 w-fit"
+                      className="mt-4 bg-gray-200 text-gray-700 px-10 py-1 cursor-pointer text-sm hover:bg-gray-300 w-fit"
                     >
                       View Job Post
                     </button>

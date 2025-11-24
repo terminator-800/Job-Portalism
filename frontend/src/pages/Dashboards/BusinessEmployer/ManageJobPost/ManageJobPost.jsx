@@ -5,14 +5,17 @@ import { useJobPostsByUser } from '../../../../../hooks/useJobposts';
 import { ROLE } from '../../../../../utils/role';
 import VerificationStatus from '../../../Dashboards/BusinessEmployer/VerificationForm/VerificationStatus';
 import ConfirmStatusChange from '../../../../components/ConfirmStatusChange';
-import ConfirmDeleteJobPost from '../../../../components/ConfirmDeleteJobPost';
+import ConfirmDeleteJobPost from '../../../../components/ConfirmDeleteJobPost/ConfirmDeleteJobPost';
 import Sidebar from '../Sidebar';
 import JobTable from './JobTable';
 import Form from '../../BusinessEmployer/VerificationForm/Form';
+import ViewJobPost from '../../../../components/ViewJobPost/ViewJobPost';
 
 const ManageJobPost = () => {
     const [showForm, setShowForm] = useState(false);
     const [state, dispatch] = useReducer(modalReducer, initialState);
+    const [showViewJobModal, setShowViewJobModal] = useState(false);
+    const [selectedJob, setSelectedJob] = useState(null);
 
     const { data: employer, isLoading: isEmployerLoading, isError, error, refetch } = useUserProfile(ROLE.BUSINESS_EMPLOYER);
     const { data: jobPostsGrouped = { pending: [], active: [], completed: [] }, isLoading: isJobsLoading } = useJobPostsByUser();
@@ -49,26 +52,33 @@ const ManageJobPost = () => {
             </div>
         );
 
+
+    const openViewJobModal = (job) => {
+        setSelectedJob(job); 
+        document.body.style.overflow = 'hidden';
+        setShowViewJobModal(true);
+    };
+
+    const closeViewJobModal = () => {
+        setSelectedJob(null);
+        document.body.style.overflow = 'auto';
+        setShowViewJobModal(false);
+    };
+
     return (
         <>
             <Sidebar />
-            <div className="relative min-h-[140vh] bg-linear-to-b from-white to-cyan-400 pl-110 pr-50 pt-50 p-10
-                            2xl:pl-110
-                            2xl:pr-50
-                            lg:pl-70
-                            lg:pr-10
-                            md:pl-15
-                            md:pr-15
-                            max-[769px]:px-10"
-            >
-
+            <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
+                
                 {employer.is_verified ? (
                     <>
-                        <header>
-                            <h1 className="text-2xl font-bold text-blue-900">Manage Job Post</h1>
-                            <p className="mt-2">View and manage all your job postings</p>
-                        </header>
-
+                    <div className="bg-white shadow-md py-6 px-10 mb-8">
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-bold text-[#003479]">Manage Job Post</h1>
+                            <p>View and manage all your job postings</p>
+                        </div>
+                    </div>
+                        
                         {['pending', 'active', 'completed'].map((key) => (
                             <JobTable
                                 key={key}
@@ -76,19 +86,14 @@ const ManageJobPost = () => {
                                 jobs={jobPostsGrouped[key]}
                                 onStatusChange={openStatusConfirmModal}
                                 onDelete={handleDeleteClick}
+                                onViewJobDetails={openViewJobModal}   
                             />
                         ))}
+
                     </>
                 ) : (
-                    <div className="bg-white shadow-md rounded-3xl p-6 w-full max-w-7xl border border-gray-300 px-20">
+                    <div className="bg-white shadow-md p-6 w-full border border-gray-300 px-20">
                         <VerificationStatus profileData={employer} openForm={openForm} />
-                        <p className="mt-4 text-sm text-gray-600">
-                            {employer.is_rejected
-                                ? 'Your verification request was rejected. Please review and resubmit the form.'
-                                : employer.is_submitted
-                                    ? 'Your verification is under review. Please wait for approval.'
-                                    : 'You need to submit verification before managing job posts.'}
-                        </p>
                     </div>
                 )}
             </div>
@@ -123,6 +128,16 @@ const ManageJobPost = () => {
                     role={ROLE.BUSINESS_EMPLOYER}
                 />
             )}
+
+            {showViewJobModal && (
+                <ViewJobPost
+                    data={selectedJob ? { active: [selectedJob], pending: [], completed: [] } : jobPostsGrouped} 
+                    role={ROLE.BUSINESS_EMPLOYER}
+                    onClose={closeViewJobModal}
+                />
+            )}
+
+
         </>
     );
 };

@@ -15,7 +15,6 @@ export function useRejectUser() {
       return response.data;
     },
     onSuccess: () => {
-      alert('User successfully rejected.');
       queryClient.invalidateQueries({ queryKey: ['submittedUsers'] });
     },
     onError: () => {

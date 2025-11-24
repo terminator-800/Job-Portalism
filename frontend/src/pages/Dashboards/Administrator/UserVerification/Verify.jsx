@@ -14,10 +14,10 @@ const Verify = ({ onClose, user }) => {
     };
   }, []);
 
-  const verifyMutation = useVerifyUser();
+  const { mutate: verify, isPending } = useVerifyUser();
 
   const handleVerify = () => {
-    verifyMutation.mutate(user.user_id, {
+    verify(user.user_id, {
       onSuccess: () => {
         onClose();
       },
@@ -25,18 +25,9 @@ const Verify = ({ onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full relative border border-gray-300
-      max-[426px]:mx-5
-      ">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl cursor-pointer"
-        >
-          &times;
-        </button>
-
+    <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center ml-55">
+      <div className=" p-8 shadow-lg max-w-3xl w-full relative backdrop-blur-2xl">
+        
         {/* Confirmation Message */}
         <h2 className="text-xl font-bold mb-4 text-center text-blue-900">
           Confirm Verification
@@ -46,7 +37,7 @@ const Verify = ({ onClose, user }) => {
         </p>
 
         {/* User Details */}
-        <div className="mb-4 text-sm text-gray-800 border border-gray-300 p-4 rounded-lg bg-gray-50">
+        <div className="mb-4 text-sm text-gray-800 border border-gray-300 p-4">
           <p>
             <strong>Full Name:</strong>{' '}
             {user.full_name || user.business_name || user.agency_name || 'N/A'}
@@ -59,22 +50,33 @@ const Verify = ({ onClose, user }) => {
           </p>
         </div>
 
-        {/* Action Buttons */}
+          {/* Action Buttons */}
         <div className="flex justify-center gap-4">
           <button
             onClick={handleVerify}
-            disabled={verifyMutation.isLoading}
-            className="bg-blue-900 hover:bg-blue-700 text-white px-6 py-2 rounded-lg cursor-pointer"
+            disabled={isPending}
+            className={`
+              px-10 py-1 text-white 
+              ${isPending ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-900 hover:bg-blue-700 cursor-pointer'}
+            `}
           >
-            {verifyMutation.isLoading ? 'Verifying...' : 'Yes, Verify'}
+            {isPending ? 'Verifying...' : 'Verify'} 
           </button>
+
           <button
             onClick={onClose}
-            className="bg-gray-300 hover:bg-gray-400 text-black px-6 py-2 rounded-lg cursor-pointer"
+            disabled={isPending}
+            className={`px-10 py-1 text-black ${
+              isPending
+                ? 'bg-gray-300 cursor-not-allowed' 
+                : 'bg-gray-300 hover:bg-gray-400 cursor-pointer' 
+            }`}
           >
             Cancel
           </button>
+
         </div>
+
       </div>
     </div>
   );

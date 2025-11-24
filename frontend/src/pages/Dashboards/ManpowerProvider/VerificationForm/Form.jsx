@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ROLE } from '../../../../../utils/role';
 import axios from 'axios';
 import FileUpload from './FileUpload';
 import PreviewImage from './PreviewImage';
 import Agreement from '../../Agreement';
+import SubmitSucessful from '../../../../components/SubmitSucessful';
 
 const ManpowerProviderForm = ({ onClose, onSubmitSuccess }) => {
+  const queryClient = useQueryClient();
   const DOLERef = useRef();
   const mayorBirRef = useRef();
   const agencyProofRef = useRef();
@@ -14,6 +16,7 @@ const ManpowerProviderForm = ({ onClose, onSubmitSuccess }) => {
 
   const [agreed, setAgreed] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [DOLEPreview, setDOLEPreview] = useState(null);
   const [showDoleModal, setShowDoleModal] = useState(false);
@@ -34,6 +37,28 @@ const ManpowerProviderForm = ({ onClose, onSubmitSuccess }) => {
   const [agency_proof, setAgency_proof] = useState(null);
   const [authorized_agency_id, setAuthorized_agency_id] = useState(null);
 
+  const resetForm = () => {
+  setAgencyName('');
+  setAgencyAddress('');
+  setAgencyServicesOffered('');
+  setAgencyAuthorizedRepresentative('');
+  setDOLE(null);
+  setMayor_permit_or_BIR(null);
+  setAgency_proof(null);
+  setAuthorized_agency_id(null);
+  setDOLEPreview(null);
+  setMayor_birPrev(null);
+  setAgency_proofPreview(null);
+  setAuthorized_agencyPreview(null);
+  setAgreed(false);
+
+  DOLERef.current?.reset();
+  mayorBirRef.current?.reset();
+  agencyProofRef.current?.reset();
+  authAgenRef.current?.reset();
+};
+
+
   const mutation = useMutation({
     mutationFn: async (formData) => {
       return await axios.post(
@@ -46,13 +71,15 @@ const ManpowerProviderForm = ({ onClose, onSubmitSuccess }) => {
       );
     },
     onSuccess: () => {
-      alert('Requirements submitted successfully!');
-      onSubmitSuccess?.();
+      setShowSuccessModal(true);
+      queryClient.invalidateQueries(['manpower-requirements']);
     },
     onError: () => {
       alert('Requirements submitted failed!');
     },
   });
+
+  const isPending = mutation.isPending;
 
   const submitRequirements = async (e) => {
     e.preventDefault();
@@ -71,6 +98,7 @@ const ManpowerProviderForm = ({ onClose, onSubmitSuccess }) => {
 
   return (
     <div className='fixed flex items-center justify-center z-50 inset-0'>
+      {!showSuccessModal && (
       <form onSubmit={submitRequirements} className='relative z-10 border-2 border-gray-300 bg-white rounded-xl p-6 h-[90vh] overflow-y-auto w-full max-w-2xl mt-20 hide-scrollbar'>
         <button
           type="button"
@@ -135,11 +163,32 @@ const ManpowerProviderForm = ({ onClose, onSubmitSuccess }) => {
           {showAgreement && <Agreement onClose={() => setShowAgreement(false)} />}
         </div>
 
-        <button type='submit' disabled={!agreed || mutation.isLoading} className={`w-full px-5 py-2 rounded mt-4 text-white ${agreed ? 'bg-blue-900 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'} cursor-pointer`}>
-          {mutation.isLoading ? 'Submitting...' : 'Submit Requirements'}
-        </button>
+        <button
+              type="submit"
+              disabled={!agreed || isPending}
+              className={`
+                w-full px-5 py-2 rounded mt-4 text-white
+                ${
+                  agreed && !isPending
+                    ? "bg-blue-900 hover:bg-blue-800 cursor-pointer"
+                    : "bg-gray-400 cursor-not-allowed"
+                }
+              `}
+            >
+              {isPending ? "Submitting..." : "Submit Requirements"}
+            </button>
       </form>
+      )}
 
+      {showSuccessModal && (
+        <SubmitSucessful 
+          onClose={() => {
+            setShowSuccessModal(false);
+            onClose(); 
+          }} 
+        />
+      )}
+      
       {/* Image Modals */}
       <PreviewImage show={showDoleModal} src={DOLEPreview} alt="DOLE Certificate Preview" onClose={() => setShowDoleModal(false)} />
       <PreviewImage show={showMayor_BirModal} src={mayor_birPrev} alt="Mayor/BIR Preview" onClose={() => setShowMayor_BirModal(false)} />

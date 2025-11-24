@@ -57,7 +57,7 @@ const Sidebar = () => {
               onClick={() => navigate(`/${ROLE.JOBSEEKER}/jobs`)}
               className="text-black hover:text-gray-300 ml-3 bg-transparent border-none cursor-pointer p-2 font-medium"
             >
-              Find Jobs
+              Browse Job
             </button>
           </li>
 

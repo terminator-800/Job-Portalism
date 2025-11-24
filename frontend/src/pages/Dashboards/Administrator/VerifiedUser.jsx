@@ -21,42 +21,38 @@ const VerifiedUser = () => {
     <>
       <Sidebar />
       <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-10
-             pt-50
+            pl-70 pr-10 pt-30
              ">
-
-        <h1 className="text-2xl font-bold text-blue-900">Verified Users</h1>
-        <p className="mt-2">
-          Browse and manage users who have been verified on the platform
-        </p>
+                <div className="bg-white shadow-md py-6 px-10 mb-8">
+                  <div className="flex flex-col">
+                    <h1 className="text-2xl font-bold text-[#003479]">Verified Users</h1>
+                    <p>
+                      Browse and manage users who have been verified on the platform
+                    </p>
+                  </div>
+                </div>
 
         <div className="flex-1">
           {isLoading ? (
-            <p className="mt-10 text-lg text-gray-600">Loading verified users...</p>
+            <p className="mt-10 text-lg text-gray-600 text-center">Loading verified users...</p>
           ) : isError ? (
             <p className="mt-10 text-red-500">{error?.message || 'Failed to load verified users.'}</p>
           ) : verifiedUsers.length === 0 ? (
-            <p className="mt-10 text-lg text-gray-500 italic">
+            <p className="mt-10 text-lg text-gray-500 italic text-center">
               No verified users found.
             </p>
           ) : (
             <div className="mt-10 flex-1 overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg overflow-hidden">
-                <thead className="bg-gray-400">
+              <table className="min-w-full divide-y divide-gray-200 border border-gray-300 overflow-hidden">
+                <thead className="bg-gray-300 text-[#374151]">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap w-1/3">
+                    <th className="px-6 py-3 text-left font-semibold whitespace-nowrap w-1/3">
                       User Details
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap w-1/3">
+                    <th className="px-6 py-3 text-left font-semibold whitespace-nowrap w-1/3">
                       Type
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap w-1/3">
+                    <th className="px-6 py-3 text-left font-semibold whitespace-nowrap w-1/3">
                       Verification Date
                     </th>
                   </tr>
@@ -119,7 +115,7 @@ const VerifiedUser = () => {
                             )}
                           </span>
                           <button
-                            className="bg-gray-200 px-4 py-1 rounded text-sm cursor-pointer"
+                            className="bg-gray-200 px-4 py-1 text-sm cursor-pointer"
                             onClick={() => setSelectedUser(user)}
                           >
                             View Details

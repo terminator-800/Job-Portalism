@@ -5,6 +5,7 @@ import { ROLE } from '../../../utils/role'
 import BackButton from '../../components/BackButton'
 import axios from 'axios'
 import Navbar from '../Navbar'
+import VerifyAccount from '../../components/VerifyAccount'
 
 const RegisterAccount = () => {
   const { mutate: resendVerification, isLoading: isResending } = useResendVerification();
@@ -15,6 +16,7 @@ const RegisterAccount = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [isRegistering, setIsRegistering] = useState(false);
   const individual = "individual"
   const business = "business"
 
@@ -25,6 +27,8 @@ const RegisterAccount = () => {
       alert("Passwords do not match");
       return;
     }
+
+    setIsRegistering(true); 
 
     try {
       if (accountType === "employer") {
@@ -40,8 +44,9 @@ const RegisterAccount = () => {
               data
             );
             if (businessRes.status === 201) {
-              navigate('/register/employer/business/account/verify');
-              alert("Business employer account created successfully");
+              // In handleRegister
+              navigate('/register/employer/business/account/verify', { state: { email } });
+              // alert("Business employer account created successfully");
             } else {
               alert("Business employer account creation failed");
             }
@@ -66,8 +71,8 @@ const RegisterAccount = () => {
             );
 
             if (individualRes.status === 201) {
-              alert("Individual employer account created successfully");
-              navigate('/register/employer/business/account/verify');
+              // alert("Individual employer account created successfully");
+              navigate('/register/employer/business/account/verify', { state: { email } });
             } else {
               alert("Individual employer account creation failed");
             }
@@ -89,12 +94,12 @@ const RegisterAccount = () => {
           };
           const res = await axios.post(`${import.meta.env.VITE_API_URL}/register/${accountType}`, data);
           if (res.status === 201) {
-            alert(
-              accountType === "jobseeker"
-                ? "Jobseeker account created successfully"
-                : "Manpower Provider account created successfully"
-            );
-            navigate(`/register/${accountType}/verify`);
+            // alert(
+            //   accountType === "jobseeker"
+            //     ? "Jobseeker account created successfully"
+            //     : "Manpower Provider account created successfully"
+            // );
+            navigate(`/register/${accountType}/verify`, { state: { email } });
           } else {
             alert("Account creation failed");
           }
@@ -112,6 +117,8 @@ const RegisterAccount = () => {
       } else {
         alert("Account creation failed");
       }
+      } finally {
+      setIsRegistering(false); // stop loading
     }
   };
 
@@ -145,8 +152,19 @@ const RegisterAccount = () => {
             <input onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} required type="password" placeholder='Enter your password again' className='outline-none border border-gray-400 rounded p-1 pl-3' />
 
             <div className="flex justify-center mt-5 gap-10">
-              <button type='submit' className='bg-blue-900 text-white pt-1 pb-1 pl-10 pr-10 rounded-3xl w-50 text-2xl cursor-pointer'>Proceed</button>
+              <button
+                type="submit"
+                disabled={isRegistering} // ✅ disable while registering
+                className={`bg-blue-900 text-white pt-1 pb-1 pl-10 pr-10 rounded-3xl w-50 text-lg ${
+                  isRegistering
+                    ? 'cursor-not-allowed bg-gray-400' // disabled style
+                    : 'hover:bg-blue-800 cursor-pointer' // normal style
+                }`}
+              >
+                {isRegistering ? "Registering..." : "Proceed"}
+              </button>
             </div>
+
           </form>
 
           {showResend && (
@@ -174,10 +192,15 @@ const RegisterAccount = () => {
                     }
                   });
                 }}
-                disabled={isResending}
-                className="text-blue-800 underline cursor-pointer"
+                disabled={isResending} 
+                className={`text-blue-800 underline ${
+                  isResending 
+                    ? 'cursor-not-allowed text-gray-400' 
+                    : 'cursor-pointer' 
+                }`}
               >
-                {isResending ? "Resending..." : "Resend Verification Email"}
+                {isResending ? "Resending..." : "Resend Verification Email"} 
+                
               </button>
             </div>
           )}

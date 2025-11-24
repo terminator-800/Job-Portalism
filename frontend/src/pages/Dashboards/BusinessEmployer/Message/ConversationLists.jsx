@@ -12,7 +12,7 @@ const ConversationList = ({ users, selectedUser, onSelect }) => {
                 return (
                     <li
                         key={user.conversation_id}
-                        className={`p-4 border-b border-gray-300 cursor-pointer flex justify-between items-start gap-3
+                        className={`p-4 border-b border-gray-300 cursor-pointer flex justify-between items-start gap-3 w-[500px]
                              ${isSelected ? 'bg-blue-100' : ''}`}
                         onClick={() => onSelect(user)}
                     >
@@ -30,7 +30,7 @@ const ConversationList = ({ users, selectedUser, onSelect }) => {
                                 </div>
                             )}
 
-                            <div>
+                            <div className='font-medium truncate max-w-[15vw]'>
                                 <div className="font-medium">{user.name || 'Unknown Name'}</div>
 
                                 {(user.authorized_person || user.agency_authorized_person) && (

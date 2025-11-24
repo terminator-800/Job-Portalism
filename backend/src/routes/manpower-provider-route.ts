@@ -23,6 +23,8 @@ import { employerDashboard } from "../controllers/userController/employer-dashbo
 import { rejectApplication } from "../controllers/userController/reject-application/reject-application.js";
 import {changeUserProfile} from '../middleware/upload-files.js'
 import { changeProfile } from '../controllers/userController/change-profile/change-profile.js'
+import { editJobPost } from "../controllers/job-post-controller/update-job-post/edit-job-post.js";
+
 const router = express.Router();
 
 router.post("/register/manpower-provider", validateRegisterInput, registerUser);
@@ -44,5 +46,6 @@ router.get("/manpower-provider/applicants", authenticate, viewApplicants);
 router.get("/manpower-provider/dashboard", authenticate, employerDashboard);
 router.patch("/manpower-provider/applications/:applicationId/reject", authenticate, rejectApplication);
 router.patch("/manpower-provider/change-profile", authenticate, changeUserProfile, changeProfile);
+router.put("/manpower-provider/edit-job-post/:job_post_id", authenticate, editJobPost);
 
 export default router;

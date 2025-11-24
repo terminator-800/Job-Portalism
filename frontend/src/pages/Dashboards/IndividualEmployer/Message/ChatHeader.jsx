@@ -2,7 +2,7 @@ import { useReportedUsers } from '../../../../../hooks/REPORT';
 import { getInitials } from './helper'
 import { useState } from 'react';
 import { ROLE } from '../../../../../utils/role';
-import ReportUser from '../../../../components/ReportUser';
+import ReportUser from '../../../../components/ReportUser/ReportUser';
 import icons from '../../../../assets/svg/Icons';
 
 const ChatHeader = ({ selectedUser }) => {

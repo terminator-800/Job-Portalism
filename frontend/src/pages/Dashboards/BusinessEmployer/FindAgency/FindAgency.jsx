@@ -9,7 +9,6 @@ import Sidebar from "../Sidebar";
 import Form from "../../../../pages/Dashboards/BusinessEmployer/VerificationForm/Form";
 
 const FindAgency = () => {
-
   const {
     data: profileData,
     isLoading: loading,
@@ -27,11 +26,13 @@ const FindAgency = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const agenciesPerPage = 4;
-  const totalPages = agencies.length > 0
-    ? Math.ceil(agencies.length / agenciesPerPage)
-    : 1;
+  const totalPages =
+    agencies.length > 0 ? Math.ceil(agencies.length / agenciesPerPage) : 1;
   const startIndex = (currentPage - 1) * agenciesPerPage;
-  const currentAgencies = agencies.slice(startIndex, startIndex + agenciesPerPage);
+  const currentAgencies = agencies.slice(
+    startIndex,
+    startIndex + agenciesPerPage
+  );
 
   const [showApply, setShowApply] = useState(false);
   const [selectedAgency, setSelectedAgency] = useState(null);
@@ -43,7 +44,7 @@ const FindAgency = () => {
   };
 
   const openForm = () => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     setShowForm(true);
   };
 
@@ -51,7 +52,9 @@ const FindAgency = () => {
     return (
       <>
         <Sidebar />
-        <div className="pl-110 pr-50 pt-50 p-10 min-h-screen text-xl">Loading profile...</div>
+        <div className="pl-110 pr-50 pt-50 p-10 min-h-screen text-xl">
+          Loading profile...
+        </div>
       </>
     );
   }
@@ -61,7 +64,8 @@ const FindAgency = () => {
       <>
         <Sidebar />
         <div className="pl-110 pr-50 pt-50 p-10 text-red-600">
-          An error occurred: {error?.message || agencyError?.message || "Unknown error."}
+          An error occurred:{" "}
+          {error?.message || agencyError?.message || "Unknown error."}
         </div>
       </>
     );
@@ -86,95 +90,98 @@ const FindAgency = () => {
           profileData={profileData}
           onClose={() => {
             setShowForm(false);
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = "auto";
           }}
           onSubmitSuccess={() => {
             setShowForm(false);
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = "auto";
             refetch();
           }}
         />
       )}
 
-      <div className="relative min-h-screen bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-50 pb-32">
+      <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30 flex flex-col">
         {profileData?.is_verified ? (
           <>
-            <h1 className="text-2xl font-bold text-blue-900">
-              Search for Manpower Provider
-            </h1>
-            <p className="mt-2">
-              Find agencies to help with your recruitment needs
-            </p>
+            <div className="bg-white shadow-md py-6 px-10 mb-8">
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-[#003479]">
+                  Search for Manpower Provider
+                </h1>
+                <p>
+                  Find agencies to help with your recruitment needs
+                </p>
+              </div>
+            </div>
 
-            {isAgenciesLoading ? (
-              <p className="mt-10 text-lg">Loading agencies...</p>
-            ) : agencies.length === 0 ? (
-              <p className="mt-10 text-lg italic text-gray-500">No manpower providers found.</p>
-            ) : (
-              <>
-                <div className="grid grid-cols-2 gap-6 mt-15">
-                  {currentAgencies.map((agency) => (
-                    <div
-                      key={agency.agency_id}
-                      className="flex flex-col bg-white rounded-xl border border-gray-300 p-6 shadow-md"
-                    >
+            <div className="grow">
+              {isAgenciesLoading ? (
+                <p className="mt-10 text-lg">Loading agencies...</p>
+              ) : agencies.length === 0 ? (
+                <p className="mt-10 text-lg italic text-gray-500">
+                  No manpower providers found.
+                </p>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-6 mt-15">
+                    {currentAgencies.map((agency) => (
+                      <div
+                        key={agency.agency_id}
+                        className="flex flex-col bg-white border border-gray-300 p-6 shadow-md"
+                      >
+                        <div className="flex items-center gap-4">
+                          {/* PROFILE */}
+                          <div className="w-14 h-14 rounded-full overflow-hidden shrink-0">
+                            {agency.profile ? (
+                              <img
+                                src={agency.profile}
+                                alt={agency.agency_name || "Agency"}
+                                className="w-full h-full object-cover rounded-full"
+                              />
+                            ) : (
+                              <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold text-gray-800">
+                                {(agency.agency_name || "")
+                                  .substring(0, 2)
+                                  .toUpperCase()}
+                              </div>
+                            )}
+                          </div>
 
-                      <div className="flex items-center gap-4">
-
-                        {/* PROFILE */}
-                        <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
-                          {agency.profile ? (
-                            <img
-                              src={agency.profile}
-                              alt={agency.agency_name || "Agency"}
-                              className="w-full h-full object-cover rounded-full"
-                            />
-                          ) : (
-                            <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold text-gray-800">
-                              {(agency.agency_name || "").substring(0, 2).toUpperCase()}
-                            </div>
-                          )}
+                          <h2 className="text-xl font-semibold">
+                            {agency.agency_name}
+                          </h2>
                         </div>
 
-                        <h2 className="text-xl font-semibold">
-                          {agency.agency_name}
-                        </h2>
+                        <div className="flex justify-between mt-6">
+                          <button
+                            onClick={() => openApply(agency)}
+                            className="bg-blue-900 text-white px-10 py-1 cursor-pointer"
+                          >
+                            Message
+                          </button>
+                          <button className="border border-gray-400 px-10 py-1 cursor-pointer">
+                            View Profile
+                          </button>
+                        </div>
                       </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
 
-                      <div className="flex justify-between mt-6">
-                        <button
-                          onClick={() => openApply(agency)}
-                          className="bg-blue-900 text-white px-10 py-2 rounded-md cursor-pointer"
-                        >
-                          Message
-                        </button>
-                        <button className="border border-gray-400 px-4 py-2 rounded-md cursor-pointer">
-                          View Profile
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Pagination Component */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  setCurrentPage={setCurrentPage}
-                />
-              </>
-            )}
+            {/* Pagination ALWAYS stays at bottom */}
+            <div className="mt-10 mb-10">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
           </>
         ) : (
-          <div className="bg-white shadow-md rounded-3xl p-6 w-full max-w-7xl border border-gray-300 px-20">
+          <div className="bg-white shadow-md p-6 w-full max-w-full border border-gray-300 px-20">
             <VerificationStatus profileData={profileData} openForm={openForm} />
-            <p className="mt-4 text-sm text-gray-600">
-              {profileData?.is_rejected
-                ? "Your verification request was rejected. Please review and resubmit the form."
-                : profileData?.is_submitted
-                  ? "Your verification is under review. Please wait for approval."
-                  : "You need to submit verification before accessing this feature."}
-            </p>
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import StatusDropdown from './StatusDropdown';
 import ActionMenu from './ActionMenu';
 
-const JobTable = ({ title, jobs, onStatusChange, onDelete }) => {
+const JobTable = ({ title, jobs, onStatusChange, onDelete, onViewJobDetails }) => {
     const [openMenuId, setOpenMenuId] = useState(null);
 
     const handleToggleMenu = (jobPostId) =>
@@ -11,9 +11,9 @@ const JobTable = ({ title, jobs, onStatusChange, onDelete }) => {
     return (
         <div className="mt-10">
             <h2 className="italic text-xl mb-2">{title}</h2>
-            <div className="bg-white rounded shadow text-gray-600">
+            <div className="bg-white shadow text-gray-600">
                 {/* Header */}
-                <div className="bg-gray-300 font-semibold flex px-4 py-3 rounded-t border-b border-gray-500">
+                <div className="bg-gray-300 font-semibold flex px-4 py-3 border-gray-500">
                     <div className="w-1/4">Job Title</div>
                     <div className="w-1/5">Type</div>
                     <div className="w-1/5">Date Posted</div>
@@ -46,6 +46,7 @@ const JobTable = ({ title, jobs, onStatusChange, onDelete }) => {
                                     isOpen={openMenuId === job.job_post_id}
                                     onToggle={() => handleToggleMenu(job.job_post_id)}
                                     onDeleteClick={() => onDelete(job)}
+                                    onViewJobDetails={() => onViewJobDetails(job)}
                                 />
                             </div>
                         </div>

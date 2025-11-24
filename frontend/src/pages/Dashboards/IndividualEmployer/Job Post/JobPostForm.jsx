@@ -1,6 +1,7 @@
 import { useCreateJobPost } from "../../../../../hooks/useCreateJobPost";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ROLE } from "../../../../../utils/role";
+import ConfirmJobPost from "../../../../components/CreateJobPost/ConfirmJobPost"; 
 
 const JobPostForm = () => {
   const [job_title, setJobTitle] = useState("");
@@ -10,7 +11,8 @@ const JobPostForm = () => {
   const [required_skill, setRequiredSkill] = useState("");
   const [job_description, setJobDescription] = useState("");
   const [agreeToReview, setAgreeToReview] = useState(false);
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
   const onSuccessCallback = () => {
     setJobTitle("");
     setJobType("");
@@ -21,7 +23,7 @@ const JobPostForm = () => {
     setAgreeToReview(false);
   };
 
-  const mutation = useCreateJobPost(ROLE.INDIVIDUAL_EMPLOYER, onSuccessCallback);
+  const { mutate, isPending, isSuccess} = useCreateJobPost(ROLE.INDIVIDUAL_EMPLOYER, onSuccessCallback);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,8 +38,24 @@ const JobPostForm = () => {
       job_description,
     };
 
-    mutation.mutate(data);
+    mutate(data);
   };
+
+  const isLoading = isPending;
+  
+      useEffect(() => {
+      if (isSuccess) {
+          onSuccessCallback(); 
+          setShowSuccessModal(true); 
+      }
+      }, [isSuccess]);
+  
+      useEffect(() => {
+      if (showSuccessModal) {
+          const timer = setTimeout(() => setShowSuccessModal(false), 5000);
+          return () => clearTimeout(timer);
+      }
+      }, [showSuccessModal]);
 
   return (
     <>
@@ -137,14 +155,24 @@ const JobPostForm = () => {
           </div>
 
           <button
-            type="submit"
-            className="bg-blue-900 text-white rounded-xl px-10 shadow-md py-2 text-2xl cursor-pointer"
-            disabled={mutation.isPending}
+              type="submit"
+              className="bg-blue-900 text-white rounded-xl px-10 shadow-md py-2 text-2xl cursor-pointer"
+              disabled={isLoading}
           >
-            {mutation.isPending ? "Submitting..." : "Confirm"}
+              {isLoading ? "Submitting..." : "Confirm"}
           </button>
         </form>
       </div>
+
+        
+      {/* Modal appears on top */}
+       {showSuccessModal && (
+            <ConfirmJobPost
+                onClose={() => setShowSuccessModal(false)}
+                closeModal={() => setShowSuccessModal(false)}
+                role={ROLE.INDIVIDUAL_EMPLOYER}
+            />
+        )}
     </>
   );
 };

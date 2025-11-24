@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-
+// Wla nani gamita
 const BackButton = ({ to = "/", className = ""}) => {
 
     const navigate = useNavigate()

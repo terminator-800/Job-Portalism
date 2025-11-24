@@ -24,19 +24,31 @@ const ViewReportedUser = ({ report, onClose }) => {
     return (
         <>
             {/* Main Modal */}
-            <div className="fixed inset-0 flex items-center justify-center bg-opacity-40 z-50">
-                <div className="bg-white w-[500px] max-w-full rounded-xl shadow-lg p-6 relative border border-gray-300
-                    max-[526px]:mx-5
-                ">
+            <div className="fixed inset-0 flex items-center justify-center bg-opacity-40 z-50 ml-55">
+                <div className="backdrop-blur-2xl max-w-3xl w-full shadow-lg p-6 relative">
                     {/* Header */}
-                    <div className="bg-blue-900 text-white px-4 py-3 rounded-t-xl -mx-6 -mt-6 mb-4 flex justify-between items-center">
+                    <div className="bg-blue-900 text-white px-4 py-3 -mx-6 -mt-6 mb-4 flex justify-between items-center">
                         <h2 className="text-lg font-bold">Report Details</h2>
-                        <button
-                            className="text-white text-2xl font-bold hover:text-gray-300 cursor-pointer"
-                            onClick={onClose}
-                        >
-                            <img src={icons.close} alt="" />
-                        </button>
+                        
+                        {/* Close Button */}
+                            <button
+                                onClick={onClose}
+                                className="mt-5 absolute -top-2 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600 transition"
+                                >
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
                     </div>
 
                     <div className="space-y-4">
@@ -74,7 +86,7 @@ const ViewReportedUser = ({ report, onClose }) => {
                                 Date Reported: {report.created_at || 'N/A'}
                             </p>
                             {report.message && (
-                                <p className="mt-2 font-semibold text-sm italic">
+                                <p className="mt-2 font-semibold text-sm italic break-all">
                                     "{report.message || "N/A"}"
                                 </p>
                             )}

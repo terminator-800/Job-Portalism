@@ -62,6 +62,7 @@ export const registerUser = async (request: Request<unknown, unknown, RegisterUs
     return response.status(400).json({ message: "Invalid role type." });
   }
 
+
   try {
     connection = await pool.getConnection();
     await connection.beginTransaction();
@@ -83,16 +84,74 @@ export const registerUser = async (request: Request<unknown, unknown, RegisterUs
       return response.status(500).json({ message: "Failed to create user." });
     }
 
+    await connection.commit();
+
     const token = jwt.sign({ email, role }, JWT_SECRET, { expiresIn: "1h" });
     const verificationLink = `${process.env.API_BASE_URL}/${role}/verify?token=${token}`;
     const emailSubject = `Verify your ${allowedRoles[role]} email`;
 
     const htmlMessage = `
-      <p>Hello,</p>
-      <p>Please verify your email address to complete registration as a <strong>${allowedRoles[role]}</strong>.</p>
-      <p>Click the link below to verify:</p>
-      <a href="${verificationLink}">${verificationLink}</a>
-      <p>This link will expire in 1 hour.</p>
+        <head>
+            <style>
+          /* Mobile responsiveness */
+          @media only screen and (max-width: 480px) {
+            .container {
+              width: 90% !important;
+              padding: 20px !important;
+            }
+            .button {
+              width: 100% !important;
+              box-sizing: border-box;
+            }
+            td {
+              font-size: 16px !important;
+              line-height: 24px !important;
+            }
+          }
+        </style>
+      </head>
+      <body style="margin:0; padding:0; font-family:'Inter', Arial, sans-serif; background-color:#F5F5F5;">
+
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F5F5F5; padding:50px 0;">
+          <tr>
+            <td align="center">
+
+              <!-- Container -->
+              <table class="container" width="400" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden; font-family:'Inter', Arial, sans-serif; max-width:400px; width:100%;">
+                
+                <!-- Header -->
+                <tr>
+                  <td style="background-color:#2F6CE5; color:#ffffff; text-align:center; padding:20px; font-size:20px; font-weight:bold; font-family:'Inter', Arial, sans-serif;">
+                    Verify Your Email
+                  </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                  <td style="padding:30px; color:#333333; font-size:14px; line-height:20px; font-family:'Inter', Arial, sans-serif;">
+                    <p>Hi ${email},</p>
+                    <p>Thank you for creating an account with TriConnect!</p>
+                    <p>Please verify your email by clicking the button below:</p>
+
+                    <p style="text-align:center; margin:30px 0;">
+                      <a href="${verificationLink}" class="button" style="background-color:#2F6CE5; color:#ffffff; text-decoration:none; padding:12px 24px; border-radius:5px; display:inline-block; font-weight:bold; font-family:'Inter', Arial, sans-serif;">
+                        Verify My Email
+                      </a>
+                    </p>
+
+                    <p>Once your email is verified, you’ll be able to submit your requirements so the admin team can review your account.</p>
+
+                    <p>Thank you,<br>
+                      The <strong>TriConnect Team</strong></p>
+                  </td>
+                </tr>
+
+              </table>
+              <!-- End Container -->
+
+            </td>
+          </tr>
+        </table>
     `;
 
     await transporter.sendMail({
@@ -102,7 +161,6 @@ export const registerUser = async (request: Request<unknown, unknown, RegisterUs
       html: htmlMessage,
     });
 
-    await connection.commit();
 
     return response.status(201).json({
       message: "Verification email sent. Please check your inbox.",
@@ -119,7 +177,6 @@ export const registerUser = async (request: Request<unknown, unknown, RegisterUs
       error
     });
     
-    if (connection) connection.rollback();
     return response.status(500).json({ message: "Server error." });
 
   } finally {

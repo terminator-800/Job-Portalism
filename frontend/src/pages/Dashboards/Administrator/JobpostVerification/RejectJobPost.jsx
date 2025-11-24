@@ -1,11 +1,10 @@
-import { useRejectJobPost } from '../../../../../hooks/useRejectJobPost';
-import { useEffect } from 'react';
+import { useRejectJobPost } from "../../../../../hooks/useRejectJobPost";
+import { useEffect } from "react";
 
 const RejectJobPost = ({ jobPost, onClose }) => {
-  
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = originalStyle;
     };
@@ -16,25 +15,28 @@ const RejectJobPost = ({ jobPost, onClose }) => {
   const handleReject = () => {
     rejectJobPostMutation.mutate(jobPost.job_post_id, {
       onSuccess: () => {
-        onClose(); 
+        onClose();
       },
       onError: () => {
-        alert('Something went wrong while rejecting the job post.');},
+        alert("Something went wrong while rejecting the job post.");
+      },
     });
   };
 
+  const isLoading = rejectJobPostMutation.isPending;
 
   return (
-    <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full relative border border-gray-300
-      max-[426px]:mx-5">
-        
-        <h2 className="text-xl font-bold mb-4 text-red-600 text-center">Reject Job Post</h2>
+    <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center ml-55">
+      <div className="p-8 shadow-lg max-w-3xl w-full relative border border-gray-300 backdrop-blur-2xl">
+        <h2 className="text-xl font-bold mb-4 text-red-600 text-center">
+          Reject Job Post
+        </h2>
         <p className="text-gray-700 text-center mb-4">
-          Are you sure you want to reject this jobpost? This action cannot be undone.
+          Are you sure you want to reject this jobpost? This action cannot be
+          undone.
         </p>
 
-        <div className="border border-gray-300 p-5 rounded-xl text-gray-600 mb-4">
+        <div className="border border-gray-300 p-5 text-gray-600 mb-4">
           <p className="text-sm">
             <strong>Job Title: </strong> {jobPost.job_title}
           </p>
@@ -50,15 +52,31 @@ const RejectJobPost = ({ jobPost, onClose }) => {
         <div className="flex justify-center gap-4">
           <button
             onClick={handleReject}
-            disabled={rejectJobPostMutation.isLoading}
-            className="px-5 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 cursor-pointer"
+            disabled={isLoading}
+            className={`
+              px-10 py-1 text-white rounded
+              ${
+                isLoading
+                  ? "bg-red-500 cursor-not-allowed opacity-70"
+                  : "bg-red-700 hover:bg-red-600 cursor-pointer"
+              }
+            `}
           >
-            {rejectJobPostMutation.isLoading ? 'Rejecting...' : 'Yes, Reject'}
+            {isLoading ? "Rejecting..." : "Reject"}
           </button>
+
+          {/* Cancel Button */}
           <button
             onClick={onClose}
-            disabled={rejectJobPostMutation.isLoading}
-            className="px-5 py-2 border border-gray-300 rounded-md hover:bg-gray-100 cursor-pointer"
+            disabled={isLoading}
+            className={`
+              px-10 py-1 border border-gray-300 rounded
+              ${
+                isLoading
+                  ? "bg-gray-200 cursor-not-allowed opacity-70"
+                  : "hover:bg-gray-100 cursor-pointer"
+              }
+            `}
           >
             Cancel
           </button>

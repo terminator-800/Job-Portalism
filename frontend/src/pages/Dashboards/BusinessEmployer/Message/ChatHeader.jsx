@@ -1,13 +1,14 @@
-import { useReportedUsers } from '../../../../../hooks/REPORT';
-import { getInitials } from './helper'
-import { useState } from 'react';
-import { ROLE } from '../../../../../utils/role';
-import ReportUser from '../../../../components/ReportUser';
-import icons from '../../../../assets/svg/Icons';
+import { useReportedUsers } from "../../../../../hooks/REPORT";
+import { getInitials } from "./helper";
+import { useState } from "react";
+import { ROLE } from "../../../../../utils/role";
+import ReportUser from "../../../../components/ReportUser/ReportUser";
+import ActionMenu from "./ActionMenu";
+import icons from "../../../../assets/svg/Icons";
 
 const ChatHeader = ({ selectedUser }) => {
-
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showActionMenu, setShowActionMenu] = useState(false);
 
   const { data: reportedUsers = [] } = useReportedUsers(ROLE.BUSINESS_EMPLOYER);
 
@@ -22,6 +23,23 @@ const ChatHeader = ({ selectedUser }) => {
   }
 
   const authorizedPerson = selectedUser?.authorized_person || null;
+
+  const handleReportClick = () => {
+    setShowActionMenu(false);
+    setShowReportModal(true);
+  };
+
+  const handleAcceptClick = () => {
+    setShowActionMenu(false);
+    // Add accept logic here
+    console.log("Accept applicant");
+  };
+
+  const handleDeclineClick = () => {
+    setShowActionMenu(false);
+    // Add decline logic here
+    console.log("Decline applicant");
+  };
 
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-300 bg-white">
@@ -41,27 +59,27 @@ const ChatHeader = ({ selectedUser }) => {
             )}
 
             <div className="text-sm text-gray-700">
-              <span className="font-medium">
-                Sent  by: {authorizedPerson}
-              </span>
+              <span className="font-medium">Sent by: {authorizedPerson}</span>
               <div className="text-xs text-gray-500">
-                {selectedUser.sent_at && `Last message: ${selectedUser.sent_at}`}
+                {selectedUser.sent_at &&
+                  `Last message: ${selectedUser.sent_at}`}
               </div>
             </div>
           </div>
 
-          {!isUserReported && (
-            <button
-              className="text-red-500 text-xl font-bold cursor-pointer"
-              onClick={() => setShowReportModal(true)}
-            >
-              <img src={icons.report_user} alt="report user" />
-            </button>
-          )}
-
+          <ActionMenu
+            isOpen={showActionMenu}
+            onToggle={setShowActionMenu}
+            onReportClick={handleReportClick}
+            onAcceptClick={handleAcceptClick}
+            onDeclineClick={handleDeclineClick}
+            icons={icons}
+          />
         </>
       ) : (
-        <div className="text-gray-400 text-center">Select a user to start chatting</div>
+        <div className="text-gray-400 text-center">
+          Select a user to start chatting
+        </div>
       )}
 
       {showReportModal && (
@@ -72,7 +90,6 @@ const ChatHeader = ({ selectedUser }) => {
           role={ROLE.BUSINESS_EMPLOYER}
         />
       )}
-
     </div>
   );
 };

@@ -9,10 +9,13 @@ const JobPostDetails = () => {
   return (
     <>
     <Sidebar/>
-    <div className="relative min-h-[140vh]  bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-50">
-  
-      <h1 className="text-2xl font-bold text-blue-900">Welcome, Employer!</h1>
-      <p className="mt-2">Your hiring platform statistics at a glance</p>
+    <div className="relative min-h-[140vh] bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
+      <div className="bg-white shadow-md py-6 px-10 mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-blue-900">Welcome, Employer!</h1>
+            <p>Your hiring platform statistics at a glance</p>
+          </div>
+      </div>
       
       {/* Recent Job Posts */}
       <div className="w-full rounded mt-15">
@@ -27,12 +30,12 @@ const JobPostDetails = () => {
           <table className="w-full border-collapse">
 
             <thead>
-              <tr className="bg-gray-300">
-                <th className="text-left py-3 px-4">Job Title</th>
-                <th className="text-left py-3 px-4">Type</th>
-                <th className="text-left py-3 px-4">Date Posted</th>
-                <th className="text-left py-3 px-4">Applicants</th>
-                <th className="text-left py-3 px-4">Status</th>
+              <tr className="bg-gray-300 px-4 py-3 rounded-t border border-gray-300">
+                <th className="text-left py-3 px-4 font-semibold">Job Title</th>
+                <th className="text-left py-3 px-4 font-semibold">Type</th>
+                <th className="text-left py-3 px-4 font-semibold">Date Posted</th>
+                <th className="text-left py-3 px-4 font-semibold">Applicants</th>
+                <th className="text-left py-3 px-4 font-semibold">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -43,7 +46,7 @@ const JobPostDetails = () => {
                 <tr><td colSpan={5} className="py-6 bg-white text-center text-gray-500 italic">No recent job posts.</td></tr>
               )}
               {!isLoading && recentJobPosts.map((p) => (
-                <tr key={p.job_post_id} className="border-b border-gray-200 bg-white">
+                <tr key={p.job_post_id} className="border-b border-gray-200 bg-white text-[#2C3E50]">
                   <td className="py-3 px-4">{p.job_title}</td>
                   <td className="py-3 px-4">{p.job_type}</td>
                   <td className="py-3 px-4">{p.created_at_formatted}</td>
@@ -81,11 +84,11 @@ const JobPostDetails = () => {
 
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-300">
-                <th className="text-left py-3 px-4">Name</th>
-                <th className="text-left py-3 px-4">Job Position</th>
-                <th className="text-left py-3 px-4">Location</th>
-                <th className="text-left py-3 px-4">Applied Date</th>
+              <tr className="bg-gray-300 ">
+                <th className="text-left py-3 px-4 font-semibold">Name</th>
+                <th className="text-left py-3 px-4 font-semibold">Job Position</th>
+                <th className="text-left py-3 px-4 font-semibold">Location</th>
+                <th className="text-left py-3 px-4 font-semibold">Applied Date</th>
               </tr>
             </thead>
             <tbody>
@@ -96,8 +99,8 @@ const JobPostDetails = () => {
                 <tr><td colSpan={4} className="py-6 text-center text-gray-500 italic bg-white">No recent applicants.</td></tr>
               )}
               {!isLoading && recentApplicants.map((a) => (
-                <tr key={a.application_id} className="border-b border-gray-200 bg-white">
-                  <td className="py-3 px-4">{a.applicant_name}</td>
+                <tr key={a.application_id} className="border-b border-gray-200 bg-white text-[#2C3E50]">
+                  <td className="py-3 px-4 ">{a.applicant_name}</td>
                   <td className="py-3 px-4">{a.job_title}</td>
                   <td className="py-3 px-4">{a.location || '-'}</td>
                   <td className="py-3 px-4">{a.applied_at_formatted || '-'}</td>

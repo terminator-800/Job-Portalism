@@ -32,34 +32,26 @@ const ReportedUser = () => {
   return (
     <>
       <Sidebar />
-      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-10
-             pt-50
-             ">
-        <div>
+      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
 
-
-
-          <h1 className="text-2xl font-bold text-blue-900">Reported Users</h1>
-          <p className="text-gray-700 mt-1">Tagline</p>
+          <div className="bg-white shadow-md py-6 px-10 mb-8">
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-blue-900">Reported Users</h1>
+              <p>Tagline</p>
+            </div>
+          </div>
 
           {/* Scrollabe */}
           <div className="flex-1 mt-10">
-            <div className="overflow-x-auto rounded-xl shadow bg-white">
+            <div className="overflow-x-auto shadow bg-white">
               <table className="min-w-max w-full text-left">
                 <thead>
-                  <tr className="bg-gray-400 text-gray-700 text-sm rounded-t-xl">
-                    <th className="px-6 py-4">User Details</th>
-                    <th className="px-6 py-4">User Type</th>
-                    <th className="px-6 py-4">Report Reason</th>
-                    <th className="px-6 py-4">Date Reported</th>
-                    <th className="px-6 py-4">Actions</th>
+                  <tr className="bg-gray-300 text-[#374151]">
+                    <th className="px-6 py-3 font-semibold">User Details</th>
+                    <th className="px-6 py-3 font-semibold">User Type</th>
+                    <th className="px-6 py-3 font-semibold">Report Reason</th>
+                    <th className="px-6 py-3 font-semibold">Date Reported</th>
+                    <th className="px-6 py-3 font-semibold">Actions</th>
                   </tr>
                 </thead>
 
@@ -139,7 +131,7 @@ const ReportedUser = () => {
                         <button
                           disabled={!report.can_view}
                           onClick={() => setSelectedReport(report)}
-                          className={`px-5 py-1.5 rounded text-white text-sm font-medium ${report.can_view
+                          className={`px-10 py-1 text-white text-sm font-medium ${report.can_view
                             ? 'bg-blue-900 hover:bg-blue-800'
                             : 'bg-gray-300 cursor-not-allowed'
                             } cursor-pointer`}
@@ -153,7 +145,6 @@ const ReportedUser = () => {
               </table>
             </div>
           </div>
-        </div>
 
         {/* Pagination always at bottom */}
         <div className='mt-10 mb-10'>

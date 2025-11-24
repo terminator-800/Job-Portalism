@@ -20,6 +20,7 @@ const IndividualEmployerProfile = () => {
     gender: '',
     date_of_birth: '',
   });
+
   const [editMode, setEditMode] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
@@ -57,8 +58,8 @@ const IndividualEmployerProfile = () => {
   return (
     <>
       <Sidebar />
-      <div className="relative min-h-screen bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-40">
-        <div className="bg-white shadow-md rounded-3xl p-6 w-full max-w-7xl border border-gray-300 px-20">
+      <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
+        <div className="bg-white shadow-md p-6 w-full border border-gray-300 px-20">
           <div>
             {profileData.is_verified ? (
               <>
@@ -88,13 +89,13 @@ const IndividualEmployerProfile = () => {
                 <div className="bg-white w-full flex justify-between mt-20 gap-5">
                   <button
                     onClick={() => setActiveTab(personal)}
-                    className={`px-10 py-1 rounded-md w-full cursor-pointer transition-all duration-200 ${activeTab === personal ? 'bg-blue-900 text-white' : 'bg-white border border-blue-900 text-blue-900'}`}
+                    className={`px-10 py-1 w-full cursor-pointer transition-all duration-200 ${activeTab === personal ? 'bg-blue-900 text-white' : 'bg-white border border-blue-900 text-blue-900'}`}
                   >
                     Personal Information
                   </button>
                   <button
                     onClick={() => setActiveTab(security)}
-                    className={`px-10 py-1 rounded-md w-full cursor-pointer transition-all duration-200 ${activeTab === security ? 'bg-blue-900 text-white' : 'bg-white border border-blue-900 text-blue-900'}`}
+                    className={`px-10 py-1 w-full cursor-pointer transition-all duration-200 ${activeTab === security ? 'bg-blue-900 text-white' : 'bg-white border border-blue-900 text-blue-900'}`}
                   >
                     Security
                   </button>

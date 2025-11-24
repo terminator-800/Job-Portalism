@@ -25,7 +25,7 @@ const CreateJobPost = () => {
   return (
     <>
       <Sidebar />
-      <div className="relative min-h-[140vh] bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-50">
+      <div className="relative min-h-[140vh] bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
         {profileData.is_verified ? (
           <JobPostForm />
         ) : profileData.is_rejected ? (

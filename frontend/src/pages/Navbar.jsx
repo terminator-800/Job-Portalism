@@ -156,6 +156,79 @@ const Navbar = ({ userType }) => {
         </nav>
       )}
 
+       {/* Register / Signup */}
+      {userType === "verify" && (
+        <nav className="border-b border-gray-300 px-6 py-4 bg-white">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <Link to="/" className="font-bold text-blue-900 flex items-center gap-3">
+              <img src={icons.logo_triconnect} alt="TriConnect logo" className="h-10" />
+              TriConnect
+            </Link>
+
+            {/* Desktop Links */}
+            <div className="hidden md:flex gap-5">
+              <Link className="font-bold">Features</Link>
+              <span>|</span>
+              <Link className="font-bold">How it Works</Link>
+              <span>|</span>
+              <Link className="font-bold">Why Us</Link>
+              <span>|</span>
+              <Link className="font-bold">Feedbacks</Link>
+            </div>
+
+            {/* Desktop Buttons */}
+            <div className="hidden md:flex">
+              <Link
+                to="/login"
+                className="text-blue-600 pl-3 p-1 pr-3 font-bold rounded m-2"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-blue-900 font-bold p-1 rounded-3xl pl-3 pr-3 text-white m-2"
+              >
+                Sign Up
+              </Link>
+            </div>
+
+            {/* Hamburger Icon (Visible below 768px) */}
+            <button
+              className="md:hidden text-blue-900 text-3xl font-bold focus:outline-none"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              ☰
+            </button>
+          </div>
+
+          {/* Mobile Dropdown Menu (Visible below 768px) */}
+          {menuOpen && (
+            <div className="flex flex-col items-center mt-4 space-y-4 md:hidden">
+              <Link className="font-bold">Features</Link>
+              <Link className="font-bold">How it Works</Link>
+              <Link className="font-bold">Why Us</Link>
+              <Link className="font-bold">Feedbacks</Link>
+
+              <div className="flex flex-col items-center">
+                <Link
+                  to="/login"
+                  className="text-blue-600 p-2 font-bold rounded"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-blue-900 font-bold p-2 rounded-3xl text-white"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            </div>
+          )}
+        </nav>
+      )}
+
       {/* Login */}
       {userType === "login" && (
         <nav className="border-b border-gray-300 px-6 py-4 bg-white fixed top-0 left-0 w-full z-50">

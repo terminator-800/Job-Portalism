@@ -15,7 +15,6 @@ export function useVerifyUser() {
             return response.data;
         },
         onSuccess: () => {
-            alert('User verified successfully!');
             queryClient.invalidateQueries({ queryKey: ['submittedUsers'] });
         },
         onError: () => {

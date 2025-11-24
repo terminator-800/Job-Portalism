@@ -19,7 +19,7 @@ export const useCreateJobPost = (role, onSuccessCallback) => {
 
         onSuccess: (res) => {
             if (res.status === 201) {
-                alert("Job post created successfully!");
+                // alert("Job post created successfully!");
                 if (onSuccessCallback) onSuccessCallback();
             }
         },

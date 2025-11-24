@@ -16,17 +16,32 @@ const ViewDocument = ({ user, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-full h-[85vh] overflow-y-auto relative border border-gray-300 hide-scrollbar 
+            <div className="backdrop-blur-2xl p-8 shadow-lg w-full h-[85vh] overflow-y-auto relative hide-scrollbar 
             max-w-3xl
             max-[769px]:mx-10
             max-[321px]:mx-2
             ">
+
+                {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl cursor-pointer"
-                >
-                    &times;
+                    className="mt-5 absolute top-4 right-8 w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600 transition"
+                    >
+                    <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
                 </button>
+                
                 <h2 className="text-2xl font-bold mb-4 text-center">User Information</h2>
                 <div className="grid grid-cols-2 gap-4 text-sm mb-6 wrap-break-word whitespace-normal">
                     {infoToShow.map(({ key, label }) => (

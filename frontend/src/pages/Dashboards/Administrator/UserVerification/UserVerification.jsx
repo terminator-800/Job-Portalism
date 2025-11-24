@@ -42,49 +42,45 @@ const UserVerification = () => {
     return (
         <>
             <Sidebar />
-            <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 
-            2xl:pl-110
-            2xl:pr-50
-            lg:pl-70
-            lg:pr-10
-            md:pl-15
-            md:pr-15
-            max-[769px]:px-10
-             pt-50
-             ">
-                <h1 className="text-2xl font-bold text-blue-900">User Verification</h1>
-                <p className="mt-2">
-                    Review and verify users to allow platform access
-                </p>
-
+            <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
+                
+                <div className="bg-white shadow-md py-6 px-10 mb-8">
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-bold text-[#003479]">User Verification</h1>
+                                <p>
+                                    Review and verify users to allow platform access
+                                </p>
+                        </div>
+                    </div>
+                
                 <div className='flex-1'>
                     {loading ? (
                         <p className="mt-10 text-lg text-gray-600">Loading users...</p>
                     ) : isError ? (
                         <p className="mt-10 text-red-500">{error?.message || 'Error loading users'}</p>
                     ) : users.length === 0 ? (
-                        <p className="mt-10 text-lg text-gray-500 italic">
+                        <p className="mt-10 text-lg text-gray-500 italic text-center">
                             No users submitted requirements.
                         </p>
                     ) : (
                         // Scrollable Table
                         <div className="mt-10 flex-1 overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg overflow-hidden">
-                                <thead className="bg-gray-400">
+                            <table className="min-w-full divide-y divide-gray-200 border border-gray-300 overflow-hidden text-[#374151]">
+                                <thead className="bg-gray-300">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
+                                        <th className="px-6 py-3 text-left font-semibold whitespace-nowrap">
                                             User Details
                                         </th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
+                                        <th className="px-6 py-3 text-left font-semibold whitespace-nowrap">
                                             Type
                                         </th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
+                                        <th className="px-6 py-3 text-left font-semibold whitespace-nowrap">
                                             Submitted Documents
                                         </th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
+                                        <th className="px-6 py-3 text-left font-semibold whitespace-nowrap">
                                             Date
                                         </th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
+                                        <th className="px-6 py-3 text-left font-semibold whitespace-nowrap">
                                             Actions
                                         </th>
                                     </tr>
@@ -143,7 +139,7 @@ const UserVerification = () => {
                                                                 setSelectedUserId(user.user_id);
                                                                 setShowConfirmModal(true);
                                                             }}
-                                                            className="bg-blue-900 hover:bg-blue-700 text-white px-3 py-1 rounded cursor-pointer"
+                                                            className="bg-blue-900 hover:bg-blue-700 text-white px-10 py-1 cursor-pointer"
                                                         >
                                                             Verify
                                                         </button>
@@ -152,14 +148,14 @@ const UserVerification = () => {
                                                                 setSelectedUserId(user.user_id);
                                                                 setShowRejectModal(true);
                                                             }}
-                                                            className="border border-red-500 px-3 py-1 rounded cursor-pointer"
+                                                            className="border border-red-500 px-10 py-1 cursor-pointer"
                                                         >
                                                             Reject
                                                         </button>
                                                     </div>
                                                     <button
                                                         onClick={() => setSelectedUserForModal(user)}
-                                                        className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer"
+                                                        className="bg-gray-300 px-17.5 py-1 hover:bg-gray-400 cursor-pointer"
                                                     >
                                                         View Documents
                                                     </button>
@@ -185,15 +181,29 @@ const UserVerification = () => {
 
                 {previewImage && (
                     <div className="fixed inset-0 bg-opacity-70 flex justify-center items-center z-50">
-                        <div className="relative bg-white p-4 rounded shadow-lg border border-gray-300">
+                        <div className="relative backdrop-blur-2xl p-4 shadow-lg">
                             <h2 className="text-lg font-semibold mb-2">{previewImage.label}</h2>
                             <img src={previewImage.src} alt={previewImage.label} className="max-w-[80vw] max-h-[80vh] object-contain" />
-                            <button
+                        
+                            {/* Close Button */}
+                                <button
                                 onClick={() => setPreviewImage(null)}
-                                className="absolute top-2 right-2 text-2xl px-2 py-1 rounded cursor-pointer"
-                            >
-                                &times;
-                            </button>
+                                className="mt-5 absolute -top-2 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600 transition"
+                                >
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                                </button>
                         </div>
                     </div>
                 )}

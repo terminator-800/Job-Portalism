@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient  } from '@tanstack/react-query';
 import { ROLE } from '../../../../../utils/role';
 import axios from "axios"
 import Agreement from '../../Agreement'
 import FileUpload from './FileUpload'
 import PreviewImage from './PreviewImage'
+import SubmitSucessful from '../../../../components/SubmitSucessful';
 
 const Form = ({ onClose, onSubmitSuccess }) => {
-
+    const queryClient = useQueryClient();
   useEffect(() => {
     const original = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -22,6 +23,7 @@ const Form = ({ onClose, onSubmitSuccess }) => {
 
   const [agreed, setAgreed] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // preview
   const [jsGovernmentIDPreview, setJsGovernmentIDPreview] = useState(null);
@@ -66,15 +68,17 @@ const Form = ({ onClose, onSubmitSuccess }) => {
       });
     },
     onSuccess: () => {
-      alert('Requirements submitted successfully!');
-      onSubmitSuccess?.();
+      setShowSuccessModal(true); 
       resetForm();
+      queryClient.invalidateQueries(['jobseeker-requirements']);
     },
     onError: (error) => {
       console.error(error);
       alert(error?.response?.data?.message || 'Failed to submit requirements. Please try again.');
     }
   });
+
+  const isPending = mutation.isPending;
 
   const resetForm = () => {
     setJsFullName("");
@@ -101,6 +105,7 @@ const Form = ({ onClose, onSubmitSuccess }) => {
 
   return (
     <div className='fixed flex items-center justify-center z-50 inset-0'>
+       {!showSuccessModal && (
       <form onSubmit={handleSubmit} className='relative z-10 border-2 border-gray-300 bg-white rounded-xl p-6 h-[90vh] overflow-y-auto w-full max-w-2xl mt-20 hide-scrollbar'>
 
         {/* ✅ Close Button */}
@@ -242,15 +247,31 @@ const Form = ({ onClose, onSubmitSuccess }) => {
           {showAgreement && <Agreement onClose={() => setShowAgreement(false)} />}
         </div>
 
-        <button
-          type='submit'
-          disabled={!agreed || mutation.isLoading}
-          className={`w-full px-5 py-2 rounded mt-2 cursor-pointer text-white ${agreed && !mutation.isLoading ? 'bg-blue-900 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'}`}
-        >
-          {mutation.isLoading ? 'Submitting...' : 'Submit Requirements'}
-        </button>
-
+            <button
+              type="submit"
+              disabled={!agreed || isPending}
+              className={`
+                w-full px-5 py-2 rounded mt-4 text-white
+                ${
+                  agreed && !isPending
+                    ? "bg-blue-900 hover:bg-blue-800 cursor-pointer"
+                    : "bg-gray-400 cursor-not-allowed"
+                }
+              `}
+            >
+              {isPending ? "Submitting..." : "Submit Requirements"}
+            </button>
       </form>
+      )}
+      
+      {showSuccessModal && (
+        <SubmitSucessful 
+          onClose={() => {
+            setShowSuccessModal(false);
+            onClose(); // Close the form modal too
+          }} 
+        />
+      )}
 
       {/* Previewing the uploaded image */}
       <PreviewImage

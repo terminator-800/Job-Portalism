@@ -57,7 +57,7 @@ const Sidebar = () => {
             </button>
           </li>
 
-          <li className={`${location.pathname.includes(`/${ROLE.INDIVIDUAL_EMPLOYER}/create`) ? 'bg-gray-500' : ''} flex`}>
+          {/* <li className={`${location.pathname.includes(`/${ROLE.INDIVIDUAL_EMPLOYER}/create`) ? 'bg-gray-500' : ''} flex`}>
             <img src={icons.create_job_post} alt="" className='ml-5 w-[27px]' />
             <button
               onClick={() => navigate(`/${ROLE.INDIVIDUAL_EMPLOYER}/create`)}
@@ -65,7 +65,7 @@ const Sidebar = () => {
             >
               Create Job Post
             </button>
-          </li>
+          </li> */}
 
           <li className={`${location.pathname.includes(`/${ROLE.INDIVIDUAL_EMPLOYER}/view`) ? 'bg-gray-500' : ''} flex`}>
             <img src={icons.view_applicant} alt="" className='ml-5 w-[27px]' />

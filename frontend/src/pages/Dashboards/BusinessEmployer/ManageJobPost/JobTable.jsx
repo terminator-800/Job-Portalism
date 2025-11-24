@@ -2,23 +2,19 @@ import { useState } from 'react';
 import StatusDropdown from './StatusDropdown';
 import ActionMenu from './ActionMenu';
 
-const JobTable = ({ title, jobs, onStatusChange, onDelete }) => {
+const JobTable = ({ title, jobs, onStatusChange, onDelete, onViewJobDetails  }) => {
     const [openMenuId, setOpenMenuId] = useState(null);
 
     const handleToggleMenu = (jobPostId) =>
         setOpenMenuId((prevId) => (prevId === jobPostId ? null : jobPostId));
 
     return (
-        // w-full max-[769px]:min-w-max divide-y divide-gray-200 border border-gray-300 rounded-lg
-        // text-left py-3 px-4 whitespace-nowrap text-sm font-semibold text-gray-700
-        <div className="mt-10 overflow-hidden overflow-x-auto w-full">
+        <div className="mt-10 w-full">
             <h2 className="italic text-xl mb-2">{title}</h2>
-            <div className="bg-white shadow text-gray-600 rounded-lg w-full 
-            max-[1025px]:min-w-max 
-            max-[769px]:min-w-max">
+            <div className="bg-white shadow text-gray-600 w-full">
                 
                 {/* Header */}
-                <div className="bg-gray-300 font-semibold flex px-4 py-3 rounded-t border border-gray-300 text-sm">
+                <div className="bg-gray-300 font-semibold flex px-4 py-3 border border-gray-300 text-[#374151]">
                     <div className="w-1/4">Job Title</div>
                     <div className="w-1/5">Type</div>
                     <div className="w-1/5">Date Posted</div>
@@ -28,7 +24,7 @@ const JobTable = ({ title, jobs, onStatusChange, onDelete }) => {
 
                 {jobs.length > 0 ? (
                     jobs.map((job) => (
-                        <div key={job.job_post_id} className="flex justify-between px-4 py-2 border-b border-gray-300 items-center">
+                        <div key={job.job_post_id} className="flex justify-between px-4 py-2 border-b border-gray-300 items-center text-[#1F2937]">
                             <div className="w-1/4">{job.job_title}</div>
                             <div className="w-1/5">{job.job_type}</div>
                             <div className="w-1/5">{job.created_at}</div>
@@ -51,6 +47,7 @@ const JobTable = ({ title, jobs, onStatusChange, onDelete }) => {
                                     isOpen={openMenuId === job.job_post_id}
                                     onToggle={() => handleToggleMenu(job.job_post_id)}
                                     onDeleteClick={() => onDelete(job)}
+                                    onViewJobDetails={() => onViewJobDetails(job)}
                                 />
                             </div>
                         </div>

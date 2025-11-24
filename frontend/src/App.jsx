@@ -19,18 +19,20 @@ import IndividualEmployerProfile from './pages/Dashboards/IndividualEmployer/Pro
 
 // Individual Employer
 import IndividualEmployerManageJobPost from "./pages/Dashboards/IndividualEmployer/ManageJobPost/ManageJobPost";
-import IndividualEmployerCreateJobPost from "./pages/Dashboards/IndividualEmployer/Job Post/CreateJobPost";
+// import IndividualEmployerCreateJobPost from "./pages/Dashboards/IndividualEmployer/Job Post/CreateJobPost";
+import IndividualDashboardLayout from '../src/pages/Dashboards/IndividualEmployer/Dashboard/DashboardLayout'
 import IndividualEmployerFindAgency from './pages/Dashboards/IndividualEmployer/FindAgency/FindAgency'
 import IndividualEmployerMessage from './pages/Dashboards/IndividualEmployer/Message/ChatLayout'
 import IndividualEmployerViewApplicant from './pages/Dashboards/IndividualEmployer/ViewApplicant/ViewApplicantLayout'
-import IndividualEmployerJobPostDetails from './pages/Dashboards/IndividualEmployer/JobPostDetails'
+// import IndividualEmployerJobPostDetails from './pages/Dashboards/IndividualEmployer/JobPostDetails'
 
 // Business Employer
 import BusinessEmployerFindAgency from './pages/Dashboards/BusinessEmployer/FindAgency/FindAgency';
 import ViewApplicant from './pages/Dashboards/BusinessEmployer/ViewApplicant/ViewApplicantLayout';
-import BusinessEmployerCreateJobPost from './pages/Dashboards/BusinessEmployer/JobPost/CreateJobPost';
+// import BusinessEmployerCreateJobPost from './pages/Dashboards/BusinessEmployer/JobPost/CreateJobPost';
 import BusinessEmployerManageJobPost from './pages/Dashboards/BusinessEmployer/ManageJobPost/ManageJobPost';
-import JobPostDetails from './pages/Dashboards/BusinessEmployer/JobPostDetails';
+// import JobPostDetails from './pages/Dashboards/BusinessEmployer/JobPostDetails';
+import BusinessDashboardLayout from '../src/pages/Dashboards/BusinessEmployer/Dashboard/DashboardLayout'
 import BusinessEmployerMessage from './pages/Dashboards/BusinessEmployer/Message/ChatLayout';
 
 // Jobseeker
@@ -40,7 +42,8 @@ import JobseekerMessage from "./pages/Dashboards/Jobseeker/Message/ChatLayout";
 
 // Manpower Provider
 import ManpowerProviderFindJob from './pages/Dashboards/ManpowerProvider/FindJob/FindJob'
-import ManpowerProviderCreateJobPost from './pages/Dashboards/ManpowerProvider/JobPost/CreateJobPost'
+// import ManpowerProviderCreateJobPost from './pages/Dashboards/ManpowerProvider/JobPost/CreateJobPost'
+import ManpowerDashboardLayout from '../src/pages/Dashboards/ManpowerProvider/Dashboard/DashboardLayout'
 import ManpowerProviderMessage from './pages/Dashboards/ManpowerProvider/Message/ChatLayout'
 import ManpowerProviderManageJobPost from './pages/Dashboards/ManpowerProvider/ManageJobPost/ManageJobPost'
 import ManpowerProviderViewApplicant from './pages/Dashboards/ManpowerProvider/ViewApplicant/ViewApplicantLayout'
@@ -126,10 +129,10 @@ function App() {
             {/* Business Employer */}
             <Route path="/business-employer/*" element={<PrivateRoute />}>
               {/* <Route  element={<BusinessEmployerDashboard />} /> */}
-              <Route path="profile/*" index element={<BusinessProfile />} />
-              <Route path="dashboard"  element={<JobPostDetails />} />
+              <Route path="profile/*" index element={<BusinessProfile/>} />
+              <Route path="dashboard"  element={<BusinessDashboardLayout />} />
               <Route path="manage" element={<BusinessEmployerManageJobPost />} />
-              <Route path="create" element={<BusinessEmployerCreateJobPost />} />
+              {/* <Route path="create" element={<BusinessEmployerCreateJobPost />} /> */}
               <Route path="view" element={<ViewApplicant />} />
               <Route path="find" element={<BusinessEmployerFindAgency />} />
               <Route path="message" element={<BusinessEmployerMessage />} />
@@ -139,9 +142,9 @@ function App() {
             <Route path="/individual-employer/*" element={<PrivateRoute />}>
               {/* <Route  element={<IndividualEmployerDashboard />} /> */}
               <Route path="profile/*" index element={<IndividualEmployerProfile />} />
-              <Route path="dashboard" element={<IndividualEmployerJobPostDetails />} />
+              <Route path="dashboard" element={<IndividualDashboardLayout/>} />
               <Route path="manage" element={<IndividualEmployerManageJobPost />} />
-              <Route path="create" element={<IndividualEmployerCreateJobPost />} />
+              {/* <Route path="create" element={<IndividualEmployerCreateJobPost />} /> */}
               <Route path="view" element={<IndividualEmployerViewApplicant />} />
               <Route path="find" element={<IndividualEmployerFindAgency />} />
               <Route path="message" element={<IndividualEmployerMessage />} />
@@ -151,9 +154,9 @@ function App() {
             <Route path="/manpower-provider/*" element={<PrivateRoute />}>
               {/* <Route  element={<ManpowerProviderDashboard />} /> */}
               <Route path="profile/*" index element={<ManpowerProviderProfile />} />
-              <Route path="dashboard" element={<ManpowerProviderJobPostDetails />} />
+              <Route path="dashboard" element={<ManpowerDashboardLayout />} />
               <Route path="jobs" element={<ManpowerProviderFindJob />} />
-              <Route path="create" element={<ManpowerProviderCreateJobPost />} />
+              {/* <Route path="create" element={<ManpowerProviderCreateJobPost />} /> */}
               <Route path="manage" element={<ManpowerProviderManageJobPost />} />
               <Route path="message" element={<ManpowerProviderMessage />} />
               <Route path="view" element={<ManpowerProviderViewApplicant />} />

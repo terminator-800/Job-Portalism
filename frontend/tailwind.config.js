@@ -12,7 +12,6 @@ export default {
       'md': '768px',     // medium
       'lg': '1024px',    // large
       'xl': '1280px',    // extra large
-      'xl1440': '1440px', // 👈 your custom breakpoint
       '2xl': '1536px',   // default 2xl
     },
   },

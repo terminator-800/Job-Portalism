@@ -36,6 +36,23 @@ import custom_tools_for_everyone from './custom_tools_for_everyone.svg';
 import secure_reliable from './secure_reliable.svg';
 import user_friendly_interface from './user_friendly_interface.svg';
 import check from './check.svg';
+import background_blur from './background_blur.svg';
+import bg_modal_blur from './bg_modal_blur.svg';
+import close_view_job_post from "./close_view_job_post.svg";
+import three_dots_vertical from './three_dots_vertical.svg';
+import verification_email from './verification_email.svg';
+import search_job_icon from './search_job_icon.svg'
+import posted_clock from './posted_clock.svg';
+import job_type from './job_type.svg';
+import location_blue from './location_blue.svg';
+import salary_range from './salary_range.svg';
+import required_skills from './required_skills.svg';
+import resume from './resume.svg';
+import cover_letter from './cover_letter.svg';
+import drag_drop from './drag_drop.svg';
+import personal_information from './personal_information.svg';
+import resume_download from './resume_download.svg';
+import download_pdf_arrow from './download_pdf_arrow.svg';
 
 const icons = {
     find_agency,
@@ -75,7 +92,24 @@ const icons = {
     custom_tools_for_everyone,
     secure_reliable,
     user_friendly_interface,
-    check
+    check,
+    background_blur,
+    bg_modal_blur,
+    close_view_job_post,
+    three_dots_vertical,
+    verification_email,
+    search_job_icon,
+    posted_clock,
+    job_type,
+    location_blue,
+    salary_range,
+    required_skills,
+    resume,
+    cover_letter,
+    drag_drop,
+    personal_information,
+    resume_download,
+    download_pdf_arrow
 }
 
 export default icons;

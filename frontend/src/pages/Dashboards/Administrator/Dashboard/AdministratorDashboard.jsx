@@ -5,11 +5,10 @@ const Dashboard = () => {
   return (
     <>
       <Sidebar />
-      <div className="min-h-screen flex flex-col justify-between 
-               bg-linear-to-b from-white to-cyan-400
-                xl:px-50 xl:pt-50
-                xl:ml-50
-                lg:ml">
+      <div className="min-h-screen flex flex-col justify-between bg-linear-to-b from-white to-cyan-400
+                pl-70 pr-10 pt-30
+                "
+                >
 
         <div>
           <h1 className="text-2xl font-bold text-blue-900">Admin Dashboard</h1>

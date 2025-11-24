@@ -1,6 +1,7 @@
 import { useCreateJobPost } from "../../../../../hooks/useCreateJobPost";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ROLE } from "../../../../../utils/role";
+import ConfirmJobPost from "../../../../components/CreateJobPost/ConfirmJobPost"; 
 
 const JobPostForm = () => {
     const [job_title, setJobTitle] = useState("");
@@ -10,8 +11,9 @@ const JobPostForm = () => {
     const [required_skill, setRequiredSkill] = useState("");
     const [job_description, setJobDescription] = useState("");
     const [agreeToReview, setAgreeToReview] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    const mutation = useCreateJobPost(ROLE.INDIVIDUAL_EMPLOYER, () => {
+    const onSuccessCallback = () => {
         setJobTitle("");
         setJobType("");
         setSalaryRange("");
@@ -19,7 +21,9 @@ const JobPostForm = () => {
         setRequiredSkill("");
         setJobDescription("");
         setAgreeToReview(false);
-    });
+    };
+
+  const { mutate, isPending, isSuccess} = useCreateJobPost(ROLE.MANPOWER_PROVIDER, onSuccessCallback);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -38,13 +42,29 @@ const JobPostForm = () => {
             job_description,
         };
 
-        mutation.mutate(data);
+        mutate(data);
     };
+
+    const isLoading = isPending;
+      
+    useEffect(() => {
+    if (isSuccess) {
+        onSuccessCallback(); 
+        setShowSuccessModal(true); 
+    }
+    }, [isSuccess]);
+
+    useEffect(() => {
+    if (showSuccessModal) {
+        const timer = setTimeout(() => setShowSuccessModal(false), 5000);
+        return () => clearTimeout(timer);
+    }
+    }, [showSuccessModal]);
 
     return (
         <>
-            <h1 className="text-5xl font-bold text-blue-900">Create Job Post</h1>
-            <p className="text-2xl mt-2">Fill out the form below to post a new job vacancy</p>
+            <h1 className="text-2xl font-bold text-blue-900">Create Job Post</h1>
+            <p className="mt-2">Fill out the form below to post a new job vacancy</p>
 
             <div className="w-full bg-white p-15 rounded mt-15">
                 <form onSubmit={handleSubmit}>
@@ -141,19 +161,21 @@ const JobPostForm = () => {
                     <button
                         type="submit"
                         className="bg-blue-900 text-white rounded-xl px-10 shadow-md py-2 text-2xl cursor-pointer"
-                        disabled={mutation.isLoading}
+                        disabled={isLoading}
                     >
-                        {mutation.isLoading ? "Submitting..." : "Confirm"}
+                        {isLoading ? "Submitting..." : "Confirm"}
                     </button>
-
-                    {mutation.isError && (
-                        <p className="text-red-600 mt-2">
-                            Failed to create job post! Please try again.
-                        </p>
-                    )}
-
                 </form>
             </div>
+
+            {/* Modal appears on top */}
+            {showSuccessModal && (
+                <ConfirmJobPost
+                    onClose={() => setShowSuccessModal(false)}
+                    closeModal={() => setShowSuccessModal(false)}
+                    role={ROLE.MANPOWER_PROVIDER}
+                />
+            )}
         </>
     );
 };

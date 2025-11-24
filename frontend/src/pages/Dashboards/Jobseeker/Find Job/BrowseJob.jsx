@@ -1,11 +1,11 @@
-import { useUnappliedJobPosts } from '../../../../../hooks/useJobposts';
-import { useState } from 'react';
-import Pagination from '../../../../components/Pagination';
-import icons from '../../../../assets/svg/Icons';
-import Apply from './Apply';
+import { useUnappliedJobPosts } from "../../../../../hooks/useJobposts";
+import { useState } from "react";
+import Pagination from "../../../../components/Pagination";
+import icons from "../../../../assets/svg/Icons";
+import Apply from "./Apply";
 
 const BrowseJob = () => {
-  const unknown = 'Unknown';
+  const unknown = "Unknown";
   const postsPerPage = 4;
   const [selectedJobPost, setSelectedJobPost] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +14,7 @@ const BrowseJob = () => {
   const {
     data: filteredJobPosts = [],
     isLoading: loadingJobPosts,
-    isError: errorJobPosts
+    isError: errorJobPosts,
   } = useUnappliedJobPosts();
 
   const startIndex = (currentPage - 1) * postsPerPage;
@@ -25,32 +25,31 @@ const BrowseJob = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-blue-900">Browse Job</h1>
-      <p className="mt-2">
-        Browse job openings and apply to positions that fit you
-      </p>
+      <div className="bg-white shadow-md py-6 px-10 mb-8 flex flex-col md:flex-row gap-4">
+        {/* Title & description */}
+        <div className="flex flex-col flex-1 justify-center">
+          <h1 className="text-2xl font-bold text-blue-900">Browse Job</h1>
+          <p>Browse job openings and apply to positions that fit you</p>
+        </div>
 
-      <div className="rounded-xl bg-white pt-2 pb-2 pl-5 pr-5 shadow-md flex justify-between items-center mt-15
-        xl:w-2xl
-        max-[351px]:justify-center
-        max-[321px]:justify-evenly
-
-      ">
-        <input
-          type="text"
-          placeholder="Search job titles"
-          className="outline-none
-                  max-[351px]:w-35
-
-          "
-        />
-        <button className="text-white bg-blue-900 rounded-xl pt-1 pb-1 pr-5 pl-5 cursor-pointer">
-          Find jobs
-        </button>
+        {/* Search Bar */}
+        <div className="flex-1 text-white pl-5 pr-5 shadow-md flex items-center gap-2 bg-[#BDC3C7]">
+          <img src={icons.search_job_icon} alt="search jobs" />
+          <input
+            type="text"
+            placeholder="Search job titles"
+            className="outline-none flex-1 "
+          />
+          <button className="text-white bg-[#2563EB] rounded-xl px-10 py-1 cursor-pointer">
+            Find jobs
+          </button>
+        </div>
       </div>
 
-      <div className="flex gap-3 mt-15">
-        <div className="w-1/2 rounded overflow-y-auto space-y-5">
+      {/* Search Bar */}
+
+      <div className="flex flex-col h-screen">
+        <div className="overflow-y-auto space-y-10 w-full">
           {loadingJobPosts ? (
             <p>Loading jobs...</p>
           ) : errorJobPosts ? (
@@ -65,19 +64,18 @@ const BrowseJob = () => {
               <div
                 key={post.job_post_id}
                 onClick={() => setSelectedJobPost(post)}
-                className={`border border-gray-300 rounded-xl py-5 px-5 shadow-md cursor-pointer h-[23.3vh] max-h-[23.3vh] overflow-hidden
-                  min-[1141px]:h-[23vh]
-                  max-[1025px]:h-[23vh]
-                  max-[769px]:h-[23vh]
-                   ${selectedJobPost?.job_post_id === post.job_post_id ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}
-                   `}
+                className={`border border-gray-300 py-5 px-5 shadow-md cursor-pointer overflow-hidden w-full min-h-[20vh] flex flex-col justify-between
+                ${
+                  selectedJobPost?.job_post_id === post.job_post_id
+                    ? "bg-gray-200"
+                    : "bg-white hover:bg-gray-100"
+                }
+                `}
               >
                 {/* Hide Scrollbar */}
-                <style>
-                  {`div::-webkit-scrollbar { display: none }`}
-                </style>
+                <style>{`div::-webkit-scrollbar { display: none }`}</style>
 
-                <div className="mb-4">
+                <div className="flex flex-col gap-1">
                   <h3 className="text-xl font-bold truncate">
                     {post.job_title}
                   </h3>
@@ -87,141 +85,197 @@ const BrowseJob = () => {
                       post.agency_name ||
                       unknown}
                   </p>
+                  <span className="bg-blue-200 text-blue-700 rounded-full px-10 py-1 mt-2 text-sm w-max">
+                    {post.job_type}
+                  </span>
                 </div>
 
-                <span className="bg-blue-200 rounded-xl px-5 py-1 text-blue-700">
-                  {post.job_type}
-                </span>
-
-                <div className="flex justify-between items-center mx-auto mt-5">
-                  <div className="flex space-x-1">
-                    <img src={icons.location} alt="Location" />
-                    <p className="text-gray-500 truncate max-w-10">{post.location}</p>
+                {/* Bottom Section */}
+                <div className="flex items-center gap-6 mt-5 text-gray-500 text-sm">
+                  {/* Location */}
+                  <div className="flex items-center gap-1 truncate">
+                    <img
+                      src={icons.location}
+                      alt="Location"
+                      className="w-4 h-4"
+                    />
+                    <span className="truncate">{post.location}</span>
                   </div>
-                  <span className="text-sm text-gray-500 ml-3 truncate">
-                    Posted: {post.approved_at}
-                  </span>
+
+                  {/* Posted Date */}
+                  <div className="flex items-center gap-1 truncate">
+                    <img
+                      src={icons.posted_clock}
+                      alt="Posted"
+                      className="w-4 h-4"
+                    />
+                    <span className="truncate">Posted: {post.approved_at}</span>
+                  </div>
                 </div>
               </div>
             ))
           )}
         </div>
 
-        <div className="w-full bg-gray-200 border border-gray-300 py-5 px-7 rounded-xl overflow-y-auto h-screen">
-          {selectedJobPost ? (
-            <>
-              <div className="flex gap-10 mb-10 mt-5 items-center
-                max-[426px]:flex-col
-              ">
-
-                {/* Profile && LOGO */}
-                <div className="w-30 h-30 rounded-full overflow-hidden shadow flex justify-center items-center bg-gray-300 border-2 border-gray-300
-                  max-[769px]:w-20 
-                  max-[769px]:h-20
-                ">
-                  {selectedJobPost.profile ? (
-                    <img
-                      src={selectedJobPost.profile}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="font-bold text-lg text-gray-800">PHOTO</span>
-                  )}
-                </div>
-
-                <div>
-                  <h2 className="text-4xl font-bold mb-3">
-                    {selectedJobPost.job_title}
-                  </h2>
-                  <p className="text-gray-700 mb-1">
-                    {selectedJobPost.business_name ||
-                      selectedJobPost.full_name ||
-                      selectedJobPost.agency_name ||
-                      unknown}
-                  </p>
-                </div>
-              </div>
-
+        {selectedJobPost && (
+          <div
+            className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 p-4 ml-55 pt-50"
+            onClick={() => setSelectedJobPost(null)}
+          >
+            <div
+              className="backdrop-blur-2xl shadow-lg relative w-full max-w-7xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
               <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-blue-900 text-white px-10 py-1 rounded-lg cursor-pointer"
+                onClick={() => setSelectedJobPost(null)}
+                className="absolute top-4 right-4 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-lg hover:bg-red-700 cursor-pointer"
               >
-                Apply Job
+                ✕
               </button>
 
-              <div className="flex font-bold justify-between mt-15 pr-60
-              max-[1890px]:pr-60
-              min-[1821px]:pr-60
-
-              min-[1441px]:pr-25
-                max-[1441px]:pr-25
-              ">
-                <h1>Job Details</h1>
-                <h1 className="max-[1349px]:hidden min-[1442px]:block">Contact Person</h1>
-              </div>
-
-              <div className="border-y-2 border-gray-300 flex justify-between pr-30
-                max-[1441px]:pr-5
-                max-[1349px]:flex-col
-                 ">
-                <div className="flex flex-col gap-3 py-3">
-                  <p className="text-gray-700 wrap-break-word whitespace-pre-wrap max-w-sm mr-10">
-                    <strong>Location:</strong> {selectedJobPost.location}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong>Salary:</strong> {selectedJobPost.salary_range}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong>{selectedJobPost.job_type}</strong>
-                  </p>
-                </div>
-
-                <div className="py-3 flex flex-col gap-2">
-
-                  {/* Hide up until 1024px */}
-                  <div className="flex font-bold justify-between pr-60
-                      max-[1441px]:pr-35
-                   ">
-                    <h1 className="min-[1349px]:hidden">Contact Person</h1>
-
+              {/* Content */}
+              <div className="p-8">
+                {/* Header - Job Title and Status */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      {selectedJobPost.job_title}
+                    </h1>
+                    <span className="bg-white text-[#1E40AF] px-3 py-1 rounded-full text-sm font-semibold">
+                      Active
+                    </span>
                   </div>
 
-                  <span className="text-gray-700">
-                    <strong>Name:</strong>{' '}
-                    {selectedJobPost.authorized_person || selectedJobPost.agency_authorized_person || selectedJobPost.full_name || unknown}
-                  </span>
+                  <div className="flex gap-3">
+                    <p className="text-gray-600 text-sm">
+                      {selectedJobPost.business_name ||
+                        selectedJobPost.full_name ||
+                        selectedJobPost.agency_name ||
+                        unknown}
+                    </p>
+                    <span>|</span>
+                    <div className="flex items-center gap-2 text-gray-500 text-sm mt-1">
+                      <span>
+                        <img src={icons.posted_clock} alt="" />
+                      </span>
+                      <span>Posted {selectedJobPost.approved_at}</span>
+                    </div>
+                  </div>
+                </div>
 
-                  <span className="text-gray-700">
-                    <strong>Posted:</strong>{' '}
-                    {selectedJobPost.approved_at}
-                  </span>
+                {/* Two Column Layout */}
+                <div className="grid grid-cols-2 gap-8 mb-8">
+                  {/* Left Column */}
+                  <div className="space-y-6">
+                    {/* Job Type */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span>
+                          <img src={icons.job_type} alt="" />
+                        </span>
+                        <label className="text-gray-600 text-sm">
+                          Job Type
+                        </label>
+                      </div>
+                      <p className="text-gray-900 font-semibold ml-6">
+                        {selectedJobPost.job_type}
+                      </p>
+                    </div>
+
+                    {/* Location */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span>
+                          <img src={icons.location_blue} alt="" />
+                        </span>
+                        <label className="text-gray-600 text-sm">
+                          Location
+                        </label>
+                      </div>
+                      <p className="text-gray-900 font-semibold ml-6">
+                        {selectedJobPost.location}
+                      </p>
+                    </div>
+
+                    {/* Salary Range */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span>
+                          <img src={icons.salary_range} alt="" />
+                        </span>
+                        <label className="text-gray-600 text-sm">
+                          Salary Range
+                        </label>
+                      </div>
+                      <p className="text-gray-900 font-semibold ml-6">
+                        {selectedJobPost.salary_range}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right Column - Required Skills */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span>
+                        <img src={icons.required_skills} alt="" />
+                      </span>
+                      <label className="text-gray-600 text-sm">
+                        Required Skills
+                      </label>
+                    </div>
+                    <ul className="ml-6 space-y-2">
+                      {selectedJobPost.required_skill &&
+                        selectedJobPost.required_skill
+                          .split("\n")
+                          .filter((skill) => skill.trim())
+                          .map((skill, idx) => (
+                            <li
+                              key={idx}
+                              className="cursor-pointer text-sm text-gray-900"
+                            >
+                              {skill.trim()}
+                            </li>
+                          ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Job Description */}
+                <div className="mb-8">
+                  <label className="text-gray-700 font-semibold text-sm block mb-3">
+                    Job Description
+                  </label>
+                  <textarea
+                    readOnly
+                    value={selectedJobPost.job_description}
+                    className="w-full p-4 backdrop-blur-2xl text-sm resize-none outline-none border border-[#6B7280]"
+                    rows={6}
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex-1 bg-blue-600 text-white cursor-pointer font-semibold px-10 py-1 hover:bg-blue-700 transition mr-10"
+                  >
+                    Apply Now
+                  </button>
+                  <button
+                    onClick={() => {}}
+                    className="flex-1 bg-transparent text-gray-800 cursor-pointer font-semibold px-10 py-1 border hover:bg-gray-50 transition"
+                  >
+                    Save Job
+                  </button>
                 </div>
               </div>
-
-              <div className="flex flex-col border-gray-300 border-b-2 py-2 mb-15 gap-2">
-                <span>
-                  <strong>Job Description</strong>
-                </span>
-                <span className="text-gray-700 wrap-break-word whitespace-pre-wrap w-full">
-                  {selectedJobPost.job_description}
-                </span>
-              </div>
-
-              <p className="text-gray-700 mb-1 wrap-break-word whitespace-pre-wrap">
-                <strong>Required Skill:</strong>{' '}
-                {selectedJobPost.required_skill}
-              </p>
-            </>
-          ) : (
-            <p className="text-gray-500 italic">
-              Click a job post to view details
-            </p>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center gap-2 mt-15 justify-center">
+      <div className="flex justify-center mt-5 pb-10">
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(filteredJobPosts.length / postsPerPage)}

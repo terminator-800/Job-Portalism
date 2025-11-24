@@ -26,18 +26,19 @@ const ChatLayout = () => {
   return (
     <>
       <Sidebar />
-      <div className="pl-110 pr-50 pt-50">
-        <h1 className="text-5xl font-bold text-blue-900">Messages</h1>
-        <p className="text-sm text-gray-600">
-          Keep in touch with employers and agencies — track your job conversations here
-        </p>
+      <div className="pl-70 pr-10 pt-30">
+        <div className="bg-white shadow-md py-6 px-10 mb-8">
+          <h1 className="text-2xl font-bold text-blue-900">Messages</h1>
+          <p className="text-gray-600">
+            Keep in touch with employers and agencies — track your job conversations here
+          </p>
+        </div>
       </div>
 
-      <div className="relative min-h-[75vh] bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-15">
-        <div className="bg-white rounded shadow-md mx-auto h-[500px] flex flex-col border border-gray-300">
+       <div className="relative min-h-[75vh] bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-15">
+        <div className="bg-white rounded shadow-md mx-auto h-[600px] flex flex-col border border-gray-300">
           <div className="flex flex-1 overflow-hidden">
-            {/* Sidebar Section */}
-            <div className="w-1/3 border-r border-gray-300">
+            <div className="border-r border-gray-300">
               <ChatTabs
                 activeTab={activeTab}
                 setActiveTab={handleTabChange}

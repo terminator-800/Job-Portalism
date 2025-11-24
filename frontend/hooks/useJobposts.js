@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient  } from '@tanstack/react-query';
 import { ROLE } from '../utils/role';
 import axios from 'axios';
 
@@ -64,6 +64,30 @@ export const useVerifiedJobPosts = () =>
       return response.data;
     },
   });
+
+  
+export const useEditJobPost = (role) => {
+  const queryClient = useQueryClient(); 
+
+  return useMutation({
+    mutationFn: async (updatedJob) => {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/${role}/edit-job-post/${updatedJob.job_post_id}`,
+        updatedJob,
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries(['jobPostsByUser']); 
+      console.log(`Job post ${variables.job_post_id} updated successfully`);
+    },
+    onError: (error) => {
+      console.error('Error updating job post:', error);
+    },
+  });
+};
+
 
 
 

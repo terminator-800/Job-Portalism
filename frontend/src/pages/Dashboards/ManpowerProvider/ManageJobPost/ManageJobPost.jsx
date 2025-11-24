@@ -5,14 +5,17 @@ import { useJobPostsByUser } from '../../../../../hooks/useJobposts';
 import { ROLE } from '../../../../../utils/role';
 import VerificationStatus from '../VerificationForm/VerificationStatus';
 import ConfirmStatusChange from '../../../../components/ConfirmStatusChange';
-import ConfirmDeleteJobPost from '../../../../components/ConfirmDeleteJobPost';
+import ConfirmDeleteJobPost from '../../../../components/ConfirmDeleteJobPost/ConfirmDeleteJobPost';
 import Sidebar from '../Sidebar';
 import JobTable from './JobTable';
 import Form from '../VerificationForm/Form';
+import ViewJobPost from '../../../../components/ViewJobPost/ViewJobPost';
 
 const ManageJobPost = () => {
     const [showForm, setShowForm] = useState(false);
     const [state, dispatch] = useReducer(modalReducer, initialState);
+    const [showViewJobModal, setShowViewJobModal] = useState(false);
+    const [selectedJob, setSelectedJob] = useState(null);
 
     const { data: provider, isLoading: isProviderLoading, isError, error, refetch } = useUserProfile(ROLE.MANPOWER_PROVIDER);
     const { data: jobPostsGrouped = { pending: [], active: [], completed: [] }, isLoading: isJobsLoading } = useJobPostsByUser();
@@ -40,17 +43,30 @@ const ManageJobPost = () => {
     if (isProviderLoading || isJobsLoading) return <div className="p-10">Loading...</div>;
     if (isError || !provider) return <div className="p-10 text-red-600">Error!</div>;
 
+    const openViewJobModal = (job) => {
+        setSelectedJob(job); 
+        document.body.style.overflow = 'hidden';
+        setShowViewJobModal(true);
+    };
+
+    const closeViewJobModal = () => {
+        setSelectedJob(null);
+        document.body.style.overflow = 'auto';
+        setShowViewJobModal(false);
+    };
+
     return (
         <>
             <Sidebar />
-            <div className="relative min-h-[140vh] bg-gradient-to-b from-white to-cyan-400 pl-110 pr-50 pt-50 p-10">
+            <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
                 {provider.is_verified ? (
                     <>
-                        <header>
-                            <h1 className="text-5xl font-bold text-blue-900">Manage Job Post</h1>
-                            <p className="text-2xl mt-2">View and manage all your job postings</p>
-                            <p className="text-md text-gray-700 mt-1">Welcome, {provider.agency_name}</p>
-                        </header>
+                        <div className="bg-white shadow-md py-6 px-10 mb-8">
+                            <div className="flex flex-col">
+                                <h1 className="text-2xl font-bold text-blue-900">Manage Job Post</h1>
+                                <p>View and manage all your job postings</p>
+                            </div>
+                        </div>
 
                         {['pending', 'active', 'completed'].map((key) => (
                             <JobTable
@@ -59,19 +75,13 @@ const ManageJobPost = () => {
                                 jobs={jobPostsGrouped[key]}
                                 onStatusChange={openStatusConfirmModal}
                                 onDelete={handleDeleteClick}
+                                onViewJobDetails={openViewJobModal}   
                             />
                         ))}
                     </>
                 ) : (
-                    <div className="bg-white shadow-md rounded-3xl p-6 w-full max-w-7xl border border-gray-300 px-20">
+                    <div className="bg-white shadow-md p-6 w-full max-w-full border border-gray-300 px-20">
                         <VerificationStatus profileData={provider} openForm={openForm} />
-                        <p className="mt-4 text-sm text-gray-600">
-                            {provider.is_rejected
-                                ? 'Your verification request was rejected.'
-                                : provider.is_submitted
-                                    ? 'Your verification is under review.'
-                                    : 'You need to submit verification before managing job posts.'}
-                        </p>
                     </div>
                 )}
             </div>
@@ -103,6 +113,14 @@ const ManageJobPost = () => {
                     data={state.statusChangeData}
                     onClose={closeStatusModal}
                     role={ROLE.MANPOWER_PROVIDER}
+                />
+            )}
+
+             {showViewJobModal && (
+                <ViewJobPost
+                    data={selectedJob ? { active: [selectedJob], pending: [], completed: [] } : jobPostsGrouped} 
+                    role={ROLE.INDIVIDUAL_EMPLOYER}
+                    onClose={closeViewJobModal}
                 />
             )}
         </>

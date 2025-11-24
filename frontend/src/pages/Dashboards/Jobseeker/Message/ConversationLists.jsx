@@ -3,7 +3,7 @@ import { getInitials } from './helper';
 const ConversationList = ({ users, selectedUser, onSelect }) => {
 
     return (
-        <div className="mt-5 overflow-y-auto w-full">
+        <div className="overflow-y-auto w-[500px]">
             <ul className="divide-y divide-gray-200">
                 {users.map((user) => {
                     const isSelected = selectedUser?.conversation_id === user.conversation_id;
@@ -34,17 +34,17 @@ const ConversationList = ({ users, selectedUser, onSelect }) => {
                                 </div>
 
                                 <div>
-                                    <div className="font-medium truncate max-w-[15vw]">
+                                    <div className="font-medium truncate ">
                                         {user.name || 'Unknown Name'}
                                     </div>
 
                                     {(user.authorized_person || user.agency_authorized_person) && (
-                                        <div className="text-sm text-gray-500 truncate max-w-[15vw]">
+                                        <div className="text-sm text-gray-500 truncate ">
                                             Authorized: {user.authorized_person || user.agency_authorized_person}
                                         </div>
                                     )}
 
-                                    <div className="text-sm text-gray-700 truncate max-w-[15vw]">
+                                    <div className="text-sm text-gray-700 truncate ">
                                         {user.message_text || 'No message yet'}
                                     </div>
                                 </div>

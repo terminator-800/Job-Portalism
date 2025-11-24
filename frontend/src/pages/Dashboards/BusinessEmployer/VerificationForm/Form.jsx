@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient  } from '@tanstack/react-query';
 import { ROLE } from '../../../../../utils/role';
 import PreviewImage from './PreviewImage';
 import FileUpload from './FileUpload';
 import Agreement from '../../Agreement';
 import axios from 'axios';
+import SubmitSucessful from '../../../../components/SubmitSucessful';
 
-const Form = ({ onClose, onSubmitSuccess }) => {
+const Form = ({ onClose }) => {
+  const queryClient = useQueryClient();
 
   // Refs for file uploads
   const authorizedRef = useRef();
@@ -17,6 +19,7 @@ const Form = ({ onClose, onSubmitSuccess }) => {
   // Agreement state
   const [agreed, setAgreed] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Previews and modals
   const [authorizedPreview, setAuthorizedPreview] = useState(null);
@@ -49,10 +52,11 @@ const Form = ({ onClose, onSubmitSuccess }) => {
       formData.append('business_address', business_address);
       formData.append('industry', industry);
       formData.append('authorized_person', authorized_person);
-      formData.append('authorized_person_id', authorized_person_id);
-      formData.append('business_permit_BIR', business_permit_BIR);
-      formData.append('DTI', DTI);
-      formData.append('business_establishment', business_establishment);
+      if (authorized_person_id) formData.append("authorized_person_id", authorized_person_id);
+      if (business_permit_BIR) formData.append("business_permit_BIR", business_permit_BIR);
+      if (DTI) formData.append("DTI", DTI);
+      if (business_establishment) formData.append("business_establishment", business_establishment);
+
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/${ROLE.BUSINESS_EMPLOYER}/upload-requirements`,
@@ -65,8 +69,8 @@ const Form = ({ onClose, onSubmitSuccess }) => {
       return response.data;
     },
     onSuccess: () => {
-      alert('Requirements submitted successfully!');
-      onSubmitSuccess?.();
+      setShowSuccessModal(true);
+      queryClient.invalidateQueries(['business-requirements']);
     },
     onError: () => {
       alert('Requirements submitted failed!');
@@ -75,10 +79,11 @@ const Form = ({ onClose, onSubmitSuccess }) => {
 
   return (
     <div className='fixed flex items-center justify-center z-50 inset-0'>
+             {!showSuccessModal && (
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          mutate(); // ← Call the mutation
+          mutate(); 
         }}
 
         className='relative z-10 border-2 border-gray-300 bg-white rounded-xl p-6 h-[90vh] overflow-y-auto w-full max-w-2xl mt-20 hide-scrollbar'
@@ -259,6 +264,16 @@ const Form = ({ onClose, onSubmitSuccess }) => {
           {isPending ? 'Submitting...' : 'Submit Requirements'}
         </button>
       </form>
+      )}
+
+      {showSuccessModal && (
+        <SubmitSucessful 
+          onClose={() => {
+            setShowSuccessModal(false);
+            onClose(); // Close the form modal too
+          }} 
+        />
+      )}
 
       {/* Image Preview Modals */}
       <PreviewImage show={showAuthorizedModal} src={authorizedPreview} alt="Authorized Person ID Preview" onClose={() => setShowAuthorizedModal(false)} />
