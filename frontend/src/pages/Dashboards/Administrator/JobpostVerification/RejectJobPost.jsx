@@ -11,17 +11,33 @@ const RejectJobPost = ({ jobPost, onClose }) => {
   }, []);
 
   const rejectJobPostMutation = useRejectJobPost();
+const TYPE_MAP = {
+  individual_job_post: 'individual',
+  team_job_post: 'team',
+  default: 'hiring', 
+};
 
-  const handleReject = () => {
-    rejectJobPostMutation.mutate(jobPost.job_post_id, {
-      onSuccess: () => {
-        onClose();
-      },
-      onError: () => {
-        alert("Something went wrong while rejecting the job post.");
-      },
-    });
+const handleReject = () => {
+  const TYPE_MAP = {
+    individual_job_post: 'individual',
+    team_job_post: 'team',
+    default: 'hiring',
   };
+  const type = TYPE_MAP[jobPost.post_type] || 'hiring';
+
+  const id = jobPost.job_post_id;
+
+
+  rejectJobPostMutation.mutate(
+    { type, id },
+    {
+      onSuccess: () => onClose(),
+      onError: () => alert("Something went wrong while rejecting the job post."),
+    }
+  );
+};
+
+
 
   const isLoading = rejectJobPostMutation.isPending;
 
@@ -54,7 +70,7 @@ const RejectJobPost = ({ jobPost, onClose }) => {
             onClick={handleReject}
             disabled={isLoading}
             className={`
-              px-10 py-1 text-white rounded
+              px-10 py-1 text-white
               ${
                 isLoading
                   ? "bg-red-500 cursor-not-allowed opacity-70"
@@ -70,7 +86,7 @@ const RejectJobPost = ({ jobPost, onClose }) => {
             onClick={onClose}
             disabled={isLoading}
             className={`
-              px-10 py-1 border border-gray-300 rounded
+              px-10 py-1 border border-gray-300
               ${
                 isLoading
                   ? "bg-gray-200 cursor-not-allowed opacity-70"

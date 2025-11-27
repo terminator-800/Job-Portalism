@@ -20,7 +20,7 @@ const ConfirmDeleteJobPost = ({ onClose, data, role }) => {
 
   const handleDelete = async () => {
     try {
-      await deleteJobPost(data.job_post_id);
+      await deleteJobPost(data.post_id);
       setShowSuccess(true);
     } catch (err) {
       alert("Failed to delete job post. Please try again.");

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../Sidebar";
-import JobPostForm from "../../../../components/CreateJobPost/JobPostForm";
+import JobPostForm from "../../../../components/CreateJobPost/HiringJobPostForm";
 import { ROLE } from "../../../../../utils/role";
 
 const DashboardLayout = () => {

@@ -1,4 +1,4 @@
-import { useCreateJobPost } from "../../../hooks/useCreateJobPost";
+import { useCreateHiringJobPost } from "../../../hooks/useCreateJobPost";
 import { useEffect } from "react";
 import { useState } from "react";
 import ConfirmJobPost from "./ConfirmJobPost";
@@ -23,7 +23,7 @@ const JobPostForm = ({ onClose, role }) => {
     setAgreeToReview(false);
   };
 
-  const { mutate, isPending, isSuccess } = useCreateJobPost(
+  const { mutate, isPending, isSuccess } = useCreateHiringJobPost(
     role,
     onSuccessCallback
   );
@@ -46,8 +46,8 @@ const JobPostForm = ({ onClose, role }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 ml-60">
-        <div className="relative w-full max-w-7xl shadow-lg p-6 overflow-y-auto max-h-[90vh] backdrop-blur-2xl mt-25">
+      <div className="fixed inset-0 z-50 flex items-center justify-center  p-4 ml-60">
+        <div className="relative w-full max-w-7xl shadow-lg py-6 overflow-y-auto max-h-[90vh] backdrop-blur-2xl mt-25 px-10">
 
           <button
             onClick={onClose}
@@ -68,7 +68,7 @@ const JobPostForm = ({ onClose, role }) => {
             </svg>
           </button>
        
-          <div className="w-full px-10 rounded">
+          <div className="w-full">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -85,14 +85,14 @@ const JobPostForm = ({ onClose, role }) => {
               <div className="mb-5">
                 <label
                   htmlFor="job_title"
-                  className="block text-lg font-medium"
+                  className="block font-medium"
                 >
                   Job Title
                 </label>
                 <input
                   id="job_title"
                   type="text"
-                  className="border border-gray-300 rounded p-2 w-full outline-none"
+                  className="border border-gray-300 p-2 w-full outline-none"
                   placeholder="Enter the job title"
                   value={job_title}
                   onChange={(e) => setJobTitle(e.target.value)}
@@ -107,7 +107,7 @@ const JobPostForm = ({ onClose, role }) => {
                 <select
                   name="job_type"
                   id="job_type"
-                  className="outline-none border border-gray-300 rounded py-2 px-2"
+                  className="outline-none border border-gray-300 py-2 px-2"
                   value={job_type}
                   onChange={(e) => setJobType(e.target.value)}
                   required
@@ -126,7 +126,7 @@ const JobPostForm = ({ onClose, role }) => {
                 <input
                   type="number"
                   placeholder="Min - Max (PHP)"
-                  className="border border-gray-300 outline-none w-1/2 px-2 py-2 rounded"
+                  className="border border-gray-300 outline-none w-1/2 px-2 py-2"
                   value={salary_range}
                   onChange={(e) => setSalaryRange(e.target.value)}
                   required
@@ -140,7 +140,7 @@ const JobPostForm = ({ onClose, role }) => {
                 <input
                   type="text"
                   placeholder="Location"
-                  className="border border-gray-300 outline-none w-1/2 px-2 py-2 rounded"
+                  className="border border-gray-300 outline-none w-1/2 px-2 py-2"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   required
@@ -154,7 +154,7 @@ const JobPostForm = ({ onClose, role }) => {
                 <input
                   type="text"
                   placeholder="e.g., Carpentry, Driving, MS Office"
-                  className="p-2 outline-none rounded border border-gray-300"
+                  className="p-2 outline-none border border-gray-300"
                   value={required_skill}
                   onChange={(e) => setRequiredSkill(e.target.value)}
                   required
@@ -167,7 +167,7 @@ const JobPostForm = ({ onClose, role }) => {
                 </label>
                 <textarea
                   id="job_description"
-                  className="border border-gray-300 rounded p-2 w-full h-32 outline-none"
+                  className="border border-gray-300 p-2 w-full h-32 outline-none resize-none"
                   placeholder="Provide a detailed and clear description of the job you are offering."
                   value={job_description}
                   onChange={(e) => setJobDescription(e.target.value)}
@@ -195,7 +195,7 @@ const JobPostForm = ({ onClose, role }) => {
                     type="submit"
                     disabled={isLoading || !agreeToReview}
                     className={`
-                      px-15 py-1 text-white shadow-md rounded
+                      px-10 py-1 text-white shadow-md
                       ${
                         !agreeToReview || isLoading
                           ? "bg-blue-400 cursor-not-allowed"

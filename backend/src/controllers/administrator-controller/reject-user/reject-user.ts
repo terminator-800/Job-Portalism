@@ -8,6 +8,8 @@ import pool from "../../../config/database-connection.js";
 import logger from "../../../config/logger.js";
 import { getRejectionEmailHTML } from './email-rejection.js'
 import { sendUserEmail } from "./email-rejection.js";
+import { notifyUser } from '../../userController/notification/notify-user.js'
+import { getNotifierCredentials } from '../../userController/notification/get-notified.js'
 
 interface RejectUserParams {
     user_id?: number;
@@ -49,8 +51,35 @@ export const rejectUser = async (req: Request<RejectUserParams>, res: Response):
                 getRejectionEmailHTML(result.displayName)
             );
         }            
+        
+        const displayName =  await getNotifierCredentials(user_id);
 
+        const io = req.app.get("io");
+        const userSocketMap = req.app.get("userSocketMap");
+        const socketId = userSocketMap[user_id];
 
+        try {
+            if (socketId) {
+            io.to(socketId).emit("notification", {
+                title: "REQUIREMENTS REJECTED",
+                message: `Hi ${displayName}, your submitted requirements have been rejected. Please check your email for details and resubmit the correct documents.`,
+                type: "account_verification",
+                notifier_id: req.user?.user_id,
+                created_at: new Date(),
+            });
+            }
+        } catch (socketError) {
+            logger.error("Failed to emit socket notification", { user_id, socketError });
+        }
+        
+        await notifyUser(
+            Number(user_id),
+            "REQUIREMENTS REJECTED",
+            `Hi ${displayName}, Your submitted requirements have been rejected. Please check your email for details and resubmit the correct documents.`,
+            "account_verification",
+            req.user?.user_id ?? null
+        ); 
+        
         logger.info(`User ${user_id} rejected successfully`);
         res.json({ success: true, message: result.message });
     } catch (error: any) {

@@ -24,6 +24,9 @@ import { rejectApplication } from "../controllers/userController/reject-applicat
 import {changeUserProfile} from '../middleware/upload-files.js'
 import { changeProfile } from '../controllers/userController/change-profile/change-profile.js'
 import { editJobPost } from "../controllers/job-post-controller/update-job-post/edit-job-post.js";
+import { getNotified } from '../controllers/userController/notification/get-notified.js';
+import { createIndividualJobPost } from '../controllers/userController/create-job-post/create-individual-job-post.js';
+import { createTeamJobPost } from '../controllers/userController/create-job-post/create-team-job-post.js';
 
 const router = express.Router();
 
@@ -47,5 +50,8 @@ router.get("/manpower-provider/dashboard", authenticate, employerDashboard);
 router.patch("/manpower-provider/applications/:applicationId/reject", authenticate, rejectApplication);
 router.patch("/manpower-provider/change-profile", authenticate, changeUserProfile, changeProfile);
 router.put("/manpower-provider/edit-job-post/:job_post_id", authenticate, editJobPost);
+router.get("/manpower-provider/notification", authenticate, getNotified);
+router.post("/manpower-provider/individual-job-post", authenticate, createIndividualJobPost);
+router.post("/manpower-provider/team-job-post", authenticate, createTeamJobPost);
 
 export default router;

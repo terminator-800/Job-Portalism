@@ -58,26 +58,23 @@ export const updateJobPostStatus = async (
     connection = await pool.getConnection();
     await connection.beginTransaction();
 
-    const result = await updateStatus(
+   const affected = await updateStatus(
       connection,
       normalizedStatus,
       jobPostIdNum
     );
 
-    if (!result) {
+    if (affected === 0) {
       await connection.rollback();
-      logger.error("Failed to update job post status", { jobPostIdNum, user_id, role, ip });
-      return res.status(500).json({ error: "Failed to update job post status" });
-    }
-
-    if (result.affectedRows === 0) {
-      await connection.rollback();
-      logger.warn("Job post not found", { jobPostIdNum, user_id, role, ip });
+      logger.warn("Job post not found in ANY table", { jobPostIdNum, user_id, role, ip });
       return res.status(404).json({ error: "Job post not found" });
     }
 
     await connection.commit();
     return res.status(200).json({ message: "Job post status updated successfully" });
+
+
+   
   } catch (error: any) {
 
     if (connection) await connection.rollback();

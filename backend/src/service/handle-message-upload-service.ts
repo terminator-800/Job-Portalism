@@ -15,27 +15,55 @@ interface HandleMessageUploadParams {
   email_address?: string;
   current_address?: string;
   job_title?: string;
+  employer_name?: string;
+  company_name?: string;
+  project_location?: string;
+  start_date?: string | Date;
+  project_description?: string;
   resume?: FileUpload;
-  files?: FileUpload[] | undefined;
+  files?: FileUpload[];
 }
 
 export const handleMessageUpload = async (
   connection: PoolConnection,
-  {
-    sender_id,
-    receiver_id,
-    message,
-    cover_letter,
-    full_name,
-    phone_number,
-    email_address,
-    current_address,
-    job_title,
-    resume,
-    files
-  }: HandleMessageUploadParams
+  params: HandleMessageUploadParams
 ) => {
   try {
+    const {
+      sender_id,
+      receiver_id,
+      message,
+      cover_letter,
+      full_name,
+      phone_number,
+      email_address,
+      current_address,
+      job_title,
+      employer_name,
+      company_name,
+      project_location,
+      start_date,
+      project_description,
+      resume,
+      files
+    } = params;
+    console.log(   sender_id,
+      receiver_id,
+      message,
+      cover_letter,
+      full_name,
+      phone_number,
+      email_address,
+      current_address,
+      job_title,
+      employer_name,
+      company_name,
+      project_location,
+      start_date,
+      project_description,
+      resume,
+      files);
+    
     // Determine conversation
     const user_small_id = Math.min(sender_id, receiver_id);
     const user_large_id = Math.max(sender_id, receiver_id);
@@ -78,6 +106,44 @@ export const handleMessageUpload = async (
           resume ? resume.path.replace(/\\/g, "/") : null, 
           job_title ?? null,                               
           "apply"                                          
+        ]
+      );
+    }
+    
+       if (
+      employer_name ||
+      company_name ||
+      phone_number ||
+      email_address ||
+      project_location ||
+      start_date ||
+      project_description
+    ) {
+      const formattedStartDate = start_date
+        ? typeof start_date === "string"
+          ? start_date
+          : start_date.toISOString().slice(0, 19).replace("T", " ")
+        : null;
+
+      await connection.query(
+        `INSERT INTO messages (
+          conversation_id, sender_id, receiver_id,
+          employer_name, company_name, phone_number, email_address,
+          project_location, start_date, project_description,
+          message_type
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          conversation_id,
+          sender_id,
+          receiver_id,
+          employer_name ?? null,
+          company_name ?? null,
+          phone_number ?? null,
+          email_address ?? null,
+          project_location ?? null,
+          formattedStartDate,
+          project_description ?? null,
+          "request"
         ]
       );
     }

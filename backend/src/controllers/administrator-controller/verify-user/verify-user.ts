@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import type { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import type { CustomRequest } from "../../types/express/auth.js";
+import type { CustomRequest } from "../../../types/express/auth.js";
 import type { Response } from "express";
-import pool from "../../config/database-connection.js";
-import logger from "../../config/logger.js";
+import pool from "../../../config/database-connection.js";
+import logger from "../../../config/logger.js";
 import nodemailer from "nodemailer";
+import { notifyUser } from '../../userController/notification/notify-user.js'
 
 const { EMAIL_USER, EMAIL_PASS, CLIENT_ORIGIN } = process.env;
 
@@ -106,6 +107,33 @@ export const verifyUser = async (req: CustomRequest, res: Response) => {
     } catch (emailError) {
       logger.error("Failed to send approval email", { email: userEmail, emailError });
     }
+
+    const io = req.app.get("io");
+    const userSocketMap = req.app.get("userSocketMap");
+    const socketId = userSocketMap[user_id];
+
+   try {
+      if (socketId) {
+        io.to(socketId).emit("notification", {
+          title: "REQUIREMENTS APPROVED",
+          message: `Hi ${displayName}, your submitted requirements have been approved. Please check your email for details and access your account.`,
+          type: "system",
+          notifier_id: req.user?.user_id,
+          created_at: new Date(),
+        });
+      }
+    } catch (socketError) {
+      logger.error("Failed to emit socket notification", { user_id, socketError });
+    }
+
+    await notifyUser(
+      Number(user_id),
+      "REQUIREMENTS APPROVED",
+      `Hi ${displayName}, your submitted requirements have been approved. Please check your email for details and access your account.`,
+      "account_verification",
+      req.user?.user_id ?? null
+    );
+
 
     res.json({ success: true, message: "User verified and approval email sent." });
 

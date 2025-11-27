@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import JobPostForm from "./JobPostForm";
+import JobPostForm from "./HiringJobPostForm";
+
 const ConfirmJobPost = ({ closeModal, role }) => {
   const navigate = useNavigate();
 

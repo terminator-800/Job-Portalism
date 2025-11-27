@@ -7,7 +7,6 @@ export async function createJobApplicationsTable(connection: Pool | PoolConnecti
       application_id INT AUTO_INCREMENT PRIMARY KEY,
       job_post_id INT NOT NULL, -- Foreign key to the job post
       applicant_id INT NOT NULL, -- Foreign key to the user applying
-      role ENUM('jobseeker', 'manpower-provider') NOT NULL,
       application_status ENUM('pending', 'reviewed', 'accepted', 'rejected') DEFAULT 'pending',
       applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (job_post_id) REFERENCES job_post(job_post_id) ON DELETE CASCADE,

@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Sidebar from "../Sidebar";
-import JobPostForm from "../../../../components/CreateJobPost/JobPostForm";
+import JobPostForm from "../../../../components/CreateJobPost/HiringJobPostForm";
 import { ROLE } from "../../../../../utils/role";
+import IndividualJobPostForm from "../../../../components/CreateJobPost/IndividualJobPostForm";
+import TeamJobPostForm from "../../../../components/CreateJobPost/TeamJobPostForm";
 
 const DashboardLayout = () => {
   const [showJobPostModal, setShowJobPostModal] = useState(false);
+  const [postType, setPostType] = useState("");
 
   const stats = [
     { label: "TOTAL APPLICANTS", value: 601, color: "text-gray-800" },
@@ -296,7 +299,6 @@ const DashboardLayout = () => {
     <>
       <Sidebar />
       <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
-        
         {/* Header */}
         <div className="bg-white shadow-md py-6 px-10 mb-8 flex justify-between items-center">
           <div>
@@ -305,12 +307,24 @@ const DashboardLayout = () => {
             </h1>
             <p>Your hiring platform statistics at a glance</p>
           </div>
-          <button
-            onClick={() => setShowJobPostModal(true)}
-            className="bg-[#2563EB] text-white px-5 py-2 rounded hover:bg-blue-700 transition cursor-pointer"
+
+          {/* DROPDOWN POSTS */}
+          <select
+            className="text-[#6B7280] outline rounded-lg border-[#6B7280] px-5 py-2  transition cursor-pointer"
+            onChange={(e) => {
+              const value = e.target.value;
+              if (!value) return;
+              setPostType(value);
+              setShowJobPostModal(true);
+            }}
           >
-            + Post Job
-          </button>
+            <option value="" hidden>
+              + Post Job
+            </option>
+            <option value="hiring">Hiring Post</option>
+            <option value="individual">Individual Post</option>
+            <option value="team">Team Post</option>
+          </select>
         </div>
 
         {/* Stats (non-map version) */}
@@ -339,7 +353,9 @@ const DashboardLayout = () => {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Recent Job Posts */}
           <div className="bg-white shadow overflow-hidden px-10">
-            <h2 className="text-lg font-semibold py-4 text-[#1F2937]">Recent Job Posts</h2>
+            <h2 className="text-lg font-semibold py-4 text-[#1F2937]">
+              Recent Job Posts
+            </h2>
             <div className="overflow-y-auto max-h-96 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded">
               <table className="w-full text-left text-gray-700">
                 <thead className="bg-[#EFF0F1] sticky top-0 z-10 text-[#374151]">
@@ -373,14 +389,14 @@ const DashboardLayout = () => {
 
           {/* Recent Applicants */}
           <div className="bg-white shadow overflow-hidden px-10">
-            <h2 className="text-lg font-semibold py-4 text-[#1F2937]">Recent Applicants</h2>
+            <h2 className="text-lg font-semibold py-4 text-[#1F2937]">
+              Recent Applicants
+            </h2>
             <div className="overflow-y-auto max-h-96 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded">
               <table className="w-full text-left text-gray-700">
                 <thead className="bg-[#EFF0F1] sticky top-0 z-10 text-[#374151]">
                   <tr>
-                    <th className="p-3 font-semibold">
-                      Applicant Name
-                    </th>
+                    <th className="p-3 font-semibold">Applicant Name</th>
                     <th className="p-3 font-semibold">Job Position</th>
                     <th className="p-3 font-semibold">Location</th>
                     <th className="p-3 font-semibold">Applied Date</th>
@@ -404,13 +420,26 @@ const DashboardLayout = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Job Post Modal */}
-      {showJobPostModal && (
-          <JobPostForm 
+        {showJobPostModal && (
+        postType === 'individual' ? (
+          <IndividualJobPostForm 
             onClose={() => setShowJobPostModal(false)} 
             role={ROLE.MANPOWER_PROVIDER}
           />
+        ) : postType === 'team' ? (
+          <TeamJobPostForm 
+            onClose={() => setShowJobPostModal(false)} 
+            role={ROLE.MANPOWER_PROVIDER}
+          />
+        ) : (
+          <JobPostForm 
+            onClose={() => setShowJobPostModal(false)} 
+            role={ROLE.MANPOWER_PROVIDER}
+            postType={postType}
+          />
+        )
       )}
 
     </>

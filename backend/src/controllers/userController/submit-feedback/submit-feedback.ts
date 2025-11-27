@@ -32,12 +32,7 @@ export const submitFeedback = async (req: FeedbackRequest, res: Response): Promi
         return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const { user_id: user_id, role } = user;
-
-    if (!allowedRoles.includes(role)) {
-        logger.warn("Unauthorized role tried to submit a feedback", { ip, role, user_id });
-        return res.status(403).json({ error: "Forbidden: Only authorized users can submit a feedback." });
-    }
+    const { user_id } = user;
 
     try {
         connection = await pool.getConnection();
@@ -46,7 +41,7 @@ export const submitFeedback = async (req: FeedbackRequest, res: Response): Promi
         const { message } = req.body;
 
         if (!message?.trim()) {
-            logger.warn("Empty feedback message submitted", { user_id, role, ip });
+            logger.warn("Empty feedback message submitted", { user_id, ip });
             return res.status(400).json({ message: "Feedback message is required." });
         }
 
@@ -56,7 +51,7 @@ export const submitFeedback = async (req: FeedbackRequest, res: Response): Promi
             return res.status(409).json({ message: "You have already submitted feedback." });
         }
 
-        const feedback = await saveFeedback(connection, user_id, role, message);
+        const feedback = await saveFeedback(connection, user_id, message);
         await connection.commit();
 
         return res.status(201).json({
@@ -64,9 +59,7 @@ export const submitFeedback = async (req: FeedbackRequest, res: Response): Promi
             feedback,
         });
     } catch (error: any) {
-
         await connection?.rollback();
-
         logger.error("Failed to submit feedback", {
             ip,
             name: error?.name || "UnknownError",
@@ -80,3 +73,4 @@ export const submitFeedback = async (req: FeedbackRequest, res: Response): Promi
         if (connection) connection.release();
     }
 };
+

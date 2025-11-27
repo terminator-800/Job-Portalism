@@ -19,6 +19,8 @@ import { authenticate } from "../middleware/authenticate.js";
 import { submitFeedback } from "../controllers/userController/submit-feedback/submit-feedback.js";
 import {changeUserProfile} from '../middleware/upload-files.js'
 import { changeProfile } from '../controllers/userController/change-profile/change-profile.js'
+import { getNotified } from '../controllers/userController/notification/get-notified.js';
+
 const router = express.Router();
 
 router.post("/register/jobseeker", validateRegisterInput, registerUser);
@@ -36,5 +38,6 @@ router.post("/jobseeker/report-user", authenticate, reportUpload, reportUser);
 router.get("/jobseeker/reported-users", authenticate, reportedUsers)
 router.post("/jobseeker/feedback", authenticate, submitFeedback);
 router.patch("/jobseeker/change-profile", authenticate, changeUserProfile, changeProfile);
+router.get("/jobseeker/notification", authenticate, getNotified);
 
 export default router;

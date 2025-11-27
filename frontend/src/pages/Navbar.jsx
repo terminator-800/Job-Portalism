@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ROLE } from "../../utils/role";
-import NotificationBell from "../components/NotificationBell";
+import NotificationBell from "../components/Notification/NotificationBell";
 import icons from "../assets/svg/Icons";
 
 const Navbar = ({ userType }) => {

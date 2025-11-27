@@ -19,7 +19,8 @@ const ManageJobPost = () => {
 
     const { data: provider, isLoading: isProviderLoading, isError, error, refetch } = useUserProfile(ROLE.MANPOWER_PROVIDER);
     const { data: jobPostsGrouped = { pending: [], active: [], completed: [] }, isLoading: isJobsLoading } = useJobPostsByUser();
-
+    console.log(jobPostsGrouped);
+    
     const openForm = () => { document.body.style.overflow = 'hidden'; setShowForm(true); };
 
     const handleDeleteClick = (job) => dispatch({ type: 'OPEN_DELETE_MODAL', payload: job });
@@ -58,7 +59,7 @@ const ManageJobPost = () => {
     return (
         <>
             <Sidebar />
-            <div className="relative min-h-screen bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
+            <div className="relative min-h-[500vh] bg-linear-to-b from-white to-cyan-400 pl-70 pr-10 pt-30">
                 {provider.is_verified ? (
                     <>
                         <div className="bg-white shadow-md py-6 px-10 mb-8">
@@ -68,11 +69,11 @@ const ManageJobPost = () => {
                             </div>
                         </div>
 
-                        {['pending', 'active', 'completed'].map((key) => (
+                        {['pending', 'active', 'completed', 'rejected'].map((key) => (
                             <JobTable
                                 key={key}
                                 title={`${key[0].toUpperCase()}${key.slice(1)} Job Post`}
-                                jobs={jobPostsGrouped[key]}
+                                jobs={jobPostsGrouped[key] || []} // fallback if undefined
                                 onStatusChange={openStatusConfirmModal}
                                 onDelete={handleDeleteClick}
                                 onViewJobDetails={openViewJobModal}   

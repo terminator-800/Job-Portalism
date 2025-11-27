@@ -6,10 +6,10 @@ export const useRejectJobPost = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (jobPostId) => {
+        mutationFn: async ({ type, id }) => {
             const response = await axios.put(
-                `${import.meta.env.VITE_API_URL}/${ROLE.ADMINISTRATOR}/reject/jobpost/${jobPostId}`,
-                {},
+                `${import.meta.env.VITE_API_URL}/administrator/reject/jobpost`, // no :id in URL
+                { type, id }, // ✅ send both in body
                 { withCredentials: true }
             );
             return response.data;
@@ -22,3 +22,5 @@ export const useRejectJobPost = () => {
         },
     });
 };
+
+

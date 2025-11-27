@@ -131,7 +131,6 @@ export async function createFeedbackTable() {
     CREATE TABLE IF NOT EXISTS feedback (
       feedback_id INT AUTO_INCREMENT PRIMARY KEY,
       user_id INT NOT NULL UNIQUE,
-      role ENUM('jobseeker', 'business-employer', 'individual-employer', 'manpower-provider') NOT NULL,
       message TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -146,7 +145,6 @@ export async function createJobApplicationsTable() {
       application_id INT AUTO_INCREMENT PRIMARY KEY,
       job_post_id INT NOT NULL, -- Foreign key to the job post
       applicant_id INT NOT NULL, -- Foreign key to the user applying
-      role ENUM('jobseeker', 'manpower-provider') NOT NULL,
       application_status ENUM('pending', 'reviewed', 'accepted', 'rejected') DEFAULT 'pending',
       applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (job_post_id) REFERENCES job_post(job_post_id) ON DELETE CASCADE,
@@ -159,9 +157,8 @@ export async function createJobApplicationsTable() {
 export async function createJobPostTable() {
     `
     CREATE TABLE IF NOT EXISTS job_post (
-      job_post_id INT AUTO_INCREMENT PRIMARY KEY,
+       job_post_id INT AUTO_INCREMENT PRIMARY KEY,
       user_id INT NOT NULL, -- Foreign key to reference the user
-      role ENUM('business-employer', 'individual-employer', 'manpower-provider') NOT NULL,
       status ENUM('pending', 'approved', 'rejected', 'draft') DEFAULT NULL,
       jobpost_status ENUM('pending', 'active', 'paused', 'completed', 'archive', 'deleted') DEFAULT NULL,
       submitted_at DATETIME DEFAULT NULL,
@@ -182,6 +179,70 @@ export async function createJobPostTable() {
   `
 }
 
+export async function createIndividualJobPostTable() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS individual_job_post (
+      individual_job_post_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL, -- Foreign key to reference the user
+      status ENUM('pending', 'approved', 'rejected', 'draft') DEFAULT NULL,
+      jobpost_status ENUM('pending', 'active', 'paused', 'completed', 'archive', 'deleted') DEFAULT NULL,
+      submitted_at DATETIME DEFAULT NULL,
+      approved_at DATETIME DEFAULT NULL,
+      expires_at DATETIME DEFAULT NULL,
+      rejection_reason TEXT DEFAULT NULL,
+      is_verified_jobpost BOOLEAN DEFAULT FALSE,
+      worker_name VARCHAR(255) DEFAULT NULL,
+      worker_category VARCHAR(255) DEFAULT NULL,
+      years_of_experience INT DEFAULT NULL,
+      location VARCHAR(255) DEFAULT NULL,
+      qualifications TEXT DEFAULT NULL,
+      skill VARCHAR(255) DEFAULT NULL,
+      applicant_count INT DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE 
+    );
+  `;
+  try {
+    await connection.execute(query);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function createTeamJobPostTable() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS team_job_post (
+      team_job_post_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL, -- Foreign key to reference the user
+      status ENUM('pending', 'approved', 'rejected', 'draft') DEFAULT NULL,
+      jobpost_status ENUM('pending', 'active', 'paused', 'completed', 'archive', 'deleted') DEFAULT NULL,
+      submitted_at DATETIME DEFAULT NULL,
+      approved_at DATETIME DEFAULT NULL,
+      expires_at DATETIME DEFAULT NULL,
+      rejection_reason TEXT DEFAULT NULL,
+      is_verified_jobpost BOOLEAN DEFAULT FALSE,
+      worker_category VARCHAR(255) DEFAULT NULL,
+      number_of_workers INT DEFAULT NULL,
+      location VARCHAR(255) DEFAULT NULL,
+      senior_workers INT DEFAULT NULL,
+      mid_level_workers INT DEFAULT NULL,
+      junior_workers INT DEFAULT NULL,
+      entry_level_workers INT DEFAULT NULL,
+      team_skills TEXT DEFAULT NULL,
+      applicant_count INT DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE 
+    );
+  `;
+  try {
+    await connection.execute(query);
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
 // Messages Schema
 export async function createMessagesTable() {
     `
@@ -192,9 +253,16 @@ export async function createMessagesTable() {
       receiver_id INT NOT NULL,
       read_at DATETIME NULL,
       is_read BOOLEAN DEFAULT FALSE,
-      message_text TEXT,
-      message_type ENUM('text', 'image', 'file') DEFAULT 'text',
-      file_url VARCHAR(255),
+      full_name VARCHAR(255) NULL,
+      phone_number VARCHAR(50) NULL,
+      email_address VARCHAR(255) NULL,
+      current_address VARCHAR(255) NULL,
+      cover_letter TEXT NULL,
+      message_text TEXT NULL,
+      job_title VARCHAR(255) NULL,
+      resume VARCHAR(255) NULL,
+      message_type ENUM('text', 'image', 'file', 'apply') DEFAULT 'text',
+      file_url VARCHAR(255) NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (conversation_id) REFERENCES conversations(conversation_id) ON DELETE CASCADE,
       INDEX idx_conversation_id (conversation_id),
@@ -251,4 +319,60 @@ export async function createReportsTable() {
     );
   `
 }
+
+export async function createNotificationTable() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS notifications (
+        notification_id INT AUTO_INCREMENT PRIMARY KEY,
+
+        -- Who receives the notification
+        user_id INT NOT NULL,
+
+        -- Who triggered the notification
+        notifier_id  INT NULL,
+
+        -- Notification category
+        type ENUM(
+            'message',
+            'job_application',
+            'job_post_status',
+            'account_verification',
+            'report',
+            'system'
+        ) NOT NULL,
+
+        -- Title + content
+        title VARCHAR(255) NOT NULL,
+        message TEXT NOT NULL,
+
+        -- Optional reference to other tables
+        reference_id INT NULL,
+        reference_type ENUM(
+            'conversation',
+            'message',
+            'job_post',
+            'job_application',
+            'report',
+            'user'
+        ) NULL,
+
+        -- Read status
+        is_read BOOLEAN DEFAULT FALSE,
+
+        -- Timestamp
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        -- Foreign key
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (notifier_id) REFERENCES users(user_id) ON DELETE SET NULL,
+
+        -- Indexes for performance
+        INDEX idx_user_id (user_id),
+        INDEX idx_reference_id (reference_id)
+        );
+  `;
+  
+}
+
+
 

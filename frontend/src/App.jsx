@@ -1,4 +1,4 @@
-import { useGlobalNotifications } from "../hooks/useGlobalNotifications";
+// import { useGlobalNotifications } from "../hooks/useGlobalNotifications";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
@@ -34,6 +34,7 @@ import BusinessEmployerManageJobPost from './pages/Dashboards/BusinessEmployer/M
 // import JobPostDetails from './pages/Dashboards/BusinessEmployer/JobPostDetails';
 import BusinessDashboardLayout from '../src/pages/Dashboards/BusinessEmployer/Dashboard/DashboardLayout'
 import BusinessEmployerMessage from './pages/Dashboards/BusinessEmployer/Message/ChatLayout';
+import FindWorkers from "./pages/Dashboards/BusinessEmployer/Dashboard/FindWorkers";
 
 // Jobseeker
 import JobseekerFindJob from "./pages/Dashboards/Jobseeker/Find Job/FindJob";
@@ -62,7 +63,7 @@ import AdministratorDashboard from "./pages/Dashboards/Administrator/Dashboard/A
 const SocketProvider = ({ children }) => {
   const { userId, role } = useAuth();
   useSocket(userId, role);
-  useGlobalNotifications(userId, role);
+  // useGlobalNotifications(userId, role);
   return children;
 };
 
@@ -132,7 +133,7 @@ function App() {
               <Route path="profile/*" index element={<BusinessProfile/>} />
               <Route path="dashboard"  element={<BusinessDashboardLayout />} />
               <Route path="manage" element={<BusinessEmployerManageJobPost />} />
-              {/* <Route path="create" element={<BusinessEmployerCreateJobPost />} /> */}
+              <Route path="find-workers" element={<FindWorkers />} />
               <Route path="view" element={<ViewApplicant />} />
               <Route path="find" element={<BusinessEmployerFindAgency />} />
               <Route path="message" element={<BusinessEmployerMessage />} />

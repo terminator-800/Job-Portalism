@@ -14,16 +14,26 @@ const ApprovedJobPost = ({ jobPost, onClose }) => {
   const approveMutation = useApproveJobPost();
   const isLoading = approveMutation.isPending;
 
-  const handleApprove = () => {
-    approveMutation.mutate(jobPost.job_post_id, {
-      onSuccess: () => {
-        onClose();
-      },
-      onError: (error) => {
-        console.error('Approval error:', error);
-      },
-    });
-  };
+      const handleApprove = () => {
+      const TYPE_MAP = {
+        individual_job_post: 'individual',
+        team_job_post: 'team',
+        default: 'hiring',
+      };
+      const type = TYPE_MAP[jobPost.post_type] || 'hiring';
+
+      const id = jobPost.job_post_id;
+
+      approveMutation.mutate(
+        { type, id },
+        {
+          onSuccess: () => onClose(),
+          onError: () => alert("Something went wrong while approving the job post."),
+        }
+      );
+    };
+
+
 
   return (
     <div className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center ml-55">

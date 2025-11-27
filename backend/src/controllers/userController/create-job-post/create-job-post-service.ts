@@ -1,12 +1,11 @@
 
-import { countActiveJobPosts, insertJobPost, validateJobPostInput } from "./create-job-post-helper.js";
+import { countActiveJobPostsAllTables, insertJobPost, validateJobPostInput } from "./create-job-post-helper.js";
 import type { ValidationResult } from "./create-job-post-helper.js";
 import type { PoolConnection } from "mysql2/promise";
 import logger from "../../../config/logger.js";
 
 export interface JobPostData {
     user_id: number;
-    role: string;
     job_title: string;
     job_type: "Full-time" | "Part-time" | "Contract";
     salary_range: string;
@@ -41,8 +40,8 @@ export async function createJobPosts(connection: PoolConnection, jobPostData: Jo
     const maxAllowed = 3;
 
     try {
-        const totalPosts: number = await countActiveJobPosts(connection, user_id);
-
+        const totalPosts: number = await countActiveJobPostsAllTables(connection, user_id);
+        
         if (totalPosts >= maxAllowed) {
             logger.warn("Max active job posts reached", { user_id, totalPosts, maxAllowed });
             return {

@@ -63,12 +63,11 @@ export const createJobPost = async (request: Request<unknown, unknown, CreateJob
         }
 
         const { job_title, job_type, salary_range, location, required_skill, job_description } = request.body;
-
+        
         const typedJobType = job_type as "Full-time" | "Part-time" | "Contract";
 
         const result: CreateJobPostResult = await createJobPosts(connection, {
             user_id,
-            role,
             job_title,
             job_type: typedJobType,
             salary_range,

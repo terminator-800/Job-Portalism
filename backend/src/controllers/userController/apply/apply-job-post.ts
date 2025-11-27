@@ -18,15 +18,36 @@ interface Message {
 
 const allowedRoles: typeof ROLE[keyof typeof ROLE][] = [
   ROLE.JOBSEEKER,
-  ROLE.MANPOWER_PROVIDER
+  ROLE.MANPOWER_PROVIDER,
+  ROLE.INDIVIDUAL_EMPLOYER,
+  ROLE.BUSINESS_EMPLOYER
 ];
 
 export const apply = async (req: CustomRequest, res: Response) => {
   let connection: PoolConnection | undefined;
   const ip = req.ip;
-  const { receiver_id, full_name, phone_number, email_address, current_address, cover_letter, job_post_id, job_title } = req.body;
+  const { 
+    receiver_id, 
+    full_name, 
+    phone_number, 
+    email_address, 
+    current_address, 
+    cover_letter, 
+    job_post_id, 
+    job_title ,
+    employer_name,
+    company_name,
+    project_location,
+    start_date,
+    project_description
+  } = req.body;
+   console.log(req.body, "APPLY BUSINESS");
+   
+
+
   const sender_id = req.user?.user_id;
   const role = req.user?.role;
+  console.log(sender_id, receiver_id, "SENDER AND RECEIVER");
   
   if (!sender_id || !role) {
     return res.status(401).json({ error: 'Unauthorized: missing user info' });
@@ -61,6 +82,11 @@ export const apply = async (req: CustomRequest, res: Response) => {
       email_address,
       current_address,
       job_title,
+      employer_name,
+      company_name,
+      project_location,
+      start_date,
+      project_description,
       resume: uploadedFiles[0]!,  
     });
 

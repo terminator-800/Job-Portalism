@@ -27,7 +27,7 @@ import { createBusinessEmployerTable } from "./schema/business-employer-schema.j
 import { createIndividualEmployerTable } from "./schema/individual-employer-schema.js";
 import { createManpowerProviderTable } from "./schema/manpower-provider-schema.js";
 import { createUsersTable } from "./schema/users-schema.js";
-import { createJobPostTable } from "./schema/job-post-schema.js";
+import { createJobPostTable, createIndividualJobPostTable, createTeamJobPostTable  } from "./schema/job-post-schema.js";
 import { createConversationsTable } from "./schema/conversations-schema.js";
 import { createMessagesTable } from "./schema/messages-schema.js";
 import { createJobApplicationsTable } from './schema/job-applications-schema.js';
@@ -35,6 +35,7 @@ import { createAdministrator } from "./controllers/administrator-controller/crea
 import { createReportsTable } from "./schema/reports-schema.js";
 import { createReportProofsTable } from "./schema/report-proof-schema.js";
 import { createFeedbackTable } from "./schema/feedback-schema.js";
+import { createNotificationTable } from './schema/notification-schema.js';
 
 // Routes
 import jobseekerRoute from "./routes/jobseeker-route.js";
@@ -75,12 +76,15 @@ async function startServer() {
     await createIndividualEmployerTable(connection);
     await createManpowerProviderTable(connection);
     await createJobPostTable(connection);
+    await createIndividualJobPostTable(connection),
+    await createTeamJobPostTable(connection),
     await createConversationsTable(connection);
     await createMessagesTable(connection);
     await createJobApplicationsTable(connection);
     await createReportsTable(connection);
     await createReportProofsTable(connection);
     await createFeedbackTable(connection)
+    await createNotificationTable(connection);
     await createAdministrator();
 
     app.locals.db = connection;
